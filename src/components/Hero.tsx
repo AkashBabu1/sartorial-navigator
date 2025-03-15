@@ -1,9 +1,16 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import AuthModal from './AuthModal';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  
+  const handleGetStarted = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsAuthModalOpen(true);
+  };
   
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -62,9 +69,12 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start pt-4">
-            <Link to="/wardrobe" className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+            <button
+              onClick={handleGetStarted}
+              className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            >
               Get Started
-            </Link>
+            </button>
             <Link to="/outfits" className="inline-flex h-12 items-center justify-center rounded-md border border-input bg-background px-6 font-medium text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
               Explore Outfits
             </Link>
@@ -121,6 +131,11 @@ const Hero = () => {
           </div>
         </div>
       </div>
+      
+      <AuthModal 
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </div>
   );
 };

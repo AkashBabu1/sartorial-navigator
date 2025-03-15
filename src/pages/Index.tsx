@@ -1,11 +1,20 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import FeatureCard from '@/components/FeatureCard';
+import FAQ from '@/components/FAQ';
+import AuthModal from '@/components/AuthModal';
 import { Link } from 'react-router-dom';
 
 const Index = () => {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  
+  const handleGetStarted = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsAuthModalOpen(true);
+  };
+  
   const features = [
     {
       title: 'AI-Powered Matching',
@@ -99,9 +108,12 @@ const Index = () => {
               </ul>
               
               <div className="pt-4">
-                <Link to="/wardrobe" className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                <button 
+                  onClick={handleGetStarted}
+                  className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
                   Get Started
-                </Link>
+                </button>
               </div>
             </div>
             
@@ -131,6 +143,9 @@ const Index = () => {
         </div>
       </section>
       
+      {/* FAQ Section */}
+      <FAQ />
+      
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-block bg-muted px-3 py-1 rounded-full text-xs font-medium mb-4">
@@ -143,9 +158,12 @@ const Index = () => {
             Join thousands of users who have simplified their outfit selection process and rediscovered items in their wardrobe.
           </p>
           
-          <Link to="/wardrobe" className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+          <button
+            onClick={handleGetStarted}
+            className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          >
             Get Started Now
-          </Link>
+          </button>
         </div>
       </section>
       
@@ -179,6 +197,11 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
     </div>
   );
 };
