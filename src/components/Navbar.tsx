@@ -24,6 +24,7 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'Wardrobe', path: '/wardrobe' },
     { name: 'Outfits', path: '/outfits' },
+    { name: 'Virtual Try-On', path: '/virtual-try-on' },
   ];
 
   return (

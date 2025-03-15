@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { ClothingItem } from './WardrobeGrid';
 import { useToast } from '@/components/ui/use-toast';
 import { matchOutfits } from '@/utils/colorUtils';
+import { motion } from 'framer-motion';
 
 interface OutfitMatcherProps {
   wardrobe: ClothingItem[];
+  filter?: string;
 }
 
 interface Outfit {
@@ -15,12 +17,24 @@ interface Outfit {
   outerwear?: ClothingItem;
   shoes?: ClothingItem;
   accessories?: ClothingItem[];
+  occasion?: string;
 }
 
-const OutfitMatcher: React.FC<OutfitMatcherProps> = ({ wardrobe }) => {
+const OutfitMatcher: React.FC<OutfitMatcherProps> = ({ wardrobe, filter = 'all' }) => {
   const [outfits, setOutfits] = useState<Outfit[]>([]);
+  const [filteredOutfits, setFilteredOutfits] = useState<Outfit[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
+  
+  useEffect(() => {
+    // Apply filtering
+    if (filter === 'all') {
+      setFilteredOutfits(outfits);
+    } else {
+      const filtered = outfits.filter(outfit => outfit.occasion === filter);
+      setFilteredOutfits(filtered);
+    }
+  }, [filter, outfits]);
   
   const generateOutfits = () => {
     setIsGenerating(true);
@@ -29,7 +43,15 @@ const OutfitMatcher: React.FC<OutfitMatcherProps> = ({ wardrobe }) => {
     setTimeout(() => {
       try {
         const generatedOutfits = matchOutfits(wardrobe);
-        setOutfits(generatedOutfits);
+        
+        // Assign random occasions to outfits (in a real app, this would use AI)
+        const occasions = ['casual', 'formal'];
+        const outfitsWithOccasions = generatedOutfits.map(outfit => ({
+          ...outfit,
+          occasion: occasions[Math.floor(Math.random() * occasions.length)]
+        }));
+        
+        setOutfits(outfitsWithOccasions);
         
         toast({
           title: "Outfits Generated",
@@ -61,8 +83,23 @@ const OutfitMatcher: React.FC<OutfitMatcherProps> = ({ wardrobe }) => {
     });
   };
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
   return (
-    <div className="w-full space-y-8 animate-fade-up">
+    <div className="w-full space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-semibold">Your Outfit Combinations</h2>
@@ -74,7 +111,7 @@ const OutfitMatcher: React.FC<OutfitMatcherProps> = ({ wardrobe }) => {
         <button
           onClick={generateOutfits}
           disabled={isGenerating || wardrobe.length < 2}
-          className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-transform duration-300"
         >
           {isGenerating ? (
             <>
@@ -88,7 +125,12 @@ const OutfitMatcher: React.FC<OutfitMatcherProps> = ({ wardrobe }) => {
       </div>
       
       {wardrobe.length < 2 && (
-        <div className="py-12 text-center border rounded-lg">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="py-12 text-center border rounded-lg"
+        >
           <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/><line x1="16" x2="22" y1="17" y2="17"/><line x1="19" x2="19" y1="14" y2="20"/></svg>
           </div>
@@ -96,27 +138,42 @@ const OutfitMatcher: React.FC<OutfitMatcherProps> = ({ wardrobe }) => {
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
             You need at least 2 items in your wardrobe to generate outfit combinations.
           </p>
-        </div>
+        </motion.div>
       )}
       
-      {wardrobe.length >= 2 && outfits.length === 0 && isGenerating && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {wardrobe.length >= 2 && filteredOutfits.length === 0 && isGenerating && (
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {[1, 2, 3].map((i) => (
-            <div key={i} className="glass-card rounded-lg overflow-hidden">
+            <motion.div key={i} variants={item} className="glass-card rounded-lg overflow-hidden">
               <div className="aspect-[4/3] bg-muted skeleton-loading"></div>
               <div className="p-4 space-y-3">
                 <div className="h-5 w-2/3 bg-muted skeleton-loading rounded"></div>
                 <div className="h-4 w-full bg-muted skeleton-loading rounded"></div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
       
-      {outfits.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {outfits.map((outfit) => (
-            <div key={outfit.id} className="glass-card rounded-lg overflow-hidden hover-lift">
+      {filteredOutfits.length > 0 && (
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {filteredOutfits.map((outfit) => (
+            <motion.div 
+              key={outfit.id} 
+              variants={item}
+              whileHover={{ y: -5 }}
+              className="glass-card rounded-lg overflow-hidden hover-lift"
+            >
               <div className="aspect-[4/3] bg-gray-50 relative">
                 <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-1 p-1">
                   {outfit.top && (
@@ -190,11 +247,20 @@ const OutfitMatcher: React.FC<OutfitMatcherProps> = ({ wardrobe }) => {
                       Shoes
                     </div>
                   )}
+                  {outfit.occasion && (
+                    <div className={`text-xs px-2 py-1 rounded-full ml-auto ${
+                      outfit.occasion === 'casual' 
+                        ? 'bg-orange-100 text-orange-800' 
+                        : 'bg-indigo-100 text-indigo-800'
+                    }`}>
+                      {outfit.occasion.charAt(0).toUpperCase() + outfit.occasion.slice(1)}
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );
