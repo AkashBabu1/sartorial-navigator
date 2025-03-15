@@ -1,14 +1,29 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { ChevronRight, Camera, Shirt, User } from 'lucide-react';
 
 const VirtualTryOn = () => {
   const [modelImage, setModelImage] = useState<string | null>(null);
   const [selectedOutfit, setSelectedOutfit] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [outfits, setOutfits] = useState<{ id: string, name: string, image: string }[]>([]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Mock outfits data
+    // In a real app, this would come from an API or local storage
+    setOutfits([
+      { id: '1', name: 'Casual Summer', image: '/placeholder.svg' },
+      { id: '2', name: 'Business Meeting', image: '/placeholder.svg' },
+      { id: '3', name: 'Weekend Brunch', image: '/placeholder.svg' },
+      { id: '4', name: 'Formal Event', image: '/placeholder.svg' },
+      { id: '5', name: 'Workout Attire', image: '/placeholder.svg' },
+    ]);
+  }, []);
 
   const handleModelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -21,7 +36,27 @@ const VirtualTryOn = () => {
     }
   };
 
+  const handleOutfitSelect = (outfitId: string) => {
+    const outfit = outfits.find(o => o.id === outfitId);
+    if (outfit) {
+      setSelectedOutfit(outfit.image);
+      toast({
+        title: "Outfit Selected",
+        description: `You've selected "${outfit.name}"`,
+      });
+    }
+  };
+
   const handleTryOn = () => {
+    if (!selectedOutfit) {
+      toast({
+        title: "No outfit selected",
+        description: "Please select an outfit first.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setIsProcessing(true);
     
     // Simulate processing time
@@ -41,7 +76,7 @@ const VirtualTryOn = () => {
       <div className="max-w-7xl mx-auto px-6 pt-24">
         <div className="text-center mb-12 animate-fade-up">
           <div className="inline-block bg-muted px-3 py-1 rounded-full text-xs font-medium mb-4">
-            Beta Feature
+            Premium Feature
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
             Virtual Try-On
@@ -66,7 +101,7 @@ const VirtualTryOn = () => {
               ) : (
                 <div className="text-center p-6">
                   <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-muted-foreground/10 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 7v12h14V7l-7-7z"/></svg>
+                    <User className="h-8 w-8 text-muted-foreground/50" />
                   </div>
                   <p className="text-sm text-muted-foreground">Upload a full-body photo</p>
                 </div>
@@ -98,7 +133,7 @@ const VirtualTryOn = () => {
               ) : (
                 <div className="text-center p-6">
                   <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-muted-foreground/10 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="10" cy="20.5" r="1"/><path d="M4 8V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"/><path d="M14 13.5V18"/><path d="M7 13.5V18"/><path d="M10 15.5v-2"/><path d="M7 10.5V5"/><path d="M14 10.5V5"/><path d="M10 8.5v2"/></svg>
+                    <Shirt className="h-8 w-8 text-muted-foreground/50" />
                   </div>
                   <p className="text-sm text-muted-foreground">Outfit visualization will appear here</p>
                 </div>
@@ -108,7 +143,7 @@ const VirtualTryOn = () => {
             <div className="text-center">
               <Button 
                 onClick={handleTryOn} 
-                disabled={!modelImage || isProcessing}
+                disabled={!modelImage || isProcessing || !selectedOutfit}
               >
                 {isProcessing ? (
                   <>
@@ -125,38 +160,98 @@ const VirtualTryOn = () => {
           </div>
         </div>
         
-        <div className="mt-16 glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "300ms" }}>
-          <h2 className="text-xl font-semibold mb-4">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
+        {/* Outfit Selection Carousel */}
+        <div className="mt-12 animate-fade-up" style={{ animationDelay: "300ms" }}>
+          <h2 className="text-xl font-semibold mb-6">Select an Outfit</h2>
+          
+          <Carousel className="w-full">
+            <CarouselContent>
+              {outfits.map((outfit) => (
+                <CarouselItem key={outfit.id} className="md:basis-1/3 lg:basis-1/4">
+                  <div 
+                    className={`glass-card p-4 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 ${selectedOutfit === outfit.image ? 'ring-2 ring-primary' : ''}`}
+                    onClick={() => handleOutfitSelect(outfit.id)}
+                  >
+                    <div className="aspect-square bg-muted rounded-md overflow-hidden mb-3">
+                      <img src={outfit.image} alt={outfit.name} className="w-full h-full object-cover" />
+                    </div>
+                    <p className="font-medium text-center">{outfit.name}</p>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex justify-center mt-4">
+              <CarouselPrevious className="relative static mx-2 transform-none translate-y-0 left-0" />
+              <CarouselNext className="relative static mx-2 transform-none translate-y-0 right-0" />
+            </div>
+          </Carousel>
+        </div>
+        
+        {/* How It Works Section */}
+        <div className="mt-16 glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "400ms" }}>
+          <h2 className="text-xl font-semibold mb-6 text-center">How Virtual Try-On Works</h2>
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="flex-1 text-center p-4">
               <div className="h-12 w-12 mx-auto mb-4 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                <span className="font-bold">1</span>
+                <Camera className="h-6 w-6" />
               </div>
-              <h3 className="font-medium mb-2">Upload Your Photo</h3>
+              <h3 className="font-medium mb-2">Upload Photo</h3>
               <p className="text-sm text-muted-foreground">
-                Provide a full-body photo with a neutral pose for best results
+                Upload a full-body photo with a neutral background
               </p>
             </div>
             
-            <div className="text-center">
+            <div className="hidden md:block">
+              <ChevronRight className="h-8 w-8 text-muted-foreground animate-pulse" />
+            </div>
+            
+            <div className="flex-1 text-center p-4">
               <div className="h-12 w-12 mx-auto mb-4 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                <span className="font-bold">2</span>
+                <Shirt className="h-6 w-6" />
               </div>
-              <h3 className="font-medium mb-2">Select an Outfit</h3>
+              <h3 className="font-medium mb-2">Select Outfit</h3>
               <p className="text-sm text-muted-foreground">
-                Choose from your generated outfits or individual items
+                Choose from your saved outfits or create a new combination
               </p>
             </div>
             
-            <div className="text-center">
+            <div className="hidden md:block">
+              <ChevronRight className="h-8 w-8 text-muted-foreground animate-pulse" />
+            </div>
+            
+            <div className="flex-1 text-center p-4">
               <div className="h-12 w-12 mx-auto mb-4 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                <span className="font-bold">3</span>
+                <User className="h-6 w-6" />
               </div>
-              <h3 className="font-medium mb-2">See the Result</h3>
+              <h3 className="font-medium mb-2">View Result</h3>
               <p className="text-sm text-muted-foreground">
-                AI visualizes how the outfit would look on your body
+                Our AI visualizes how the outfit would look on your body
               </p>
             </div>
+          </div>
+          
+          <div className="mt-8 border-t border-muted pt-6">
+            <h3 className="font-medium mb-4 text-center">Tips for Best Results</h3>
+            <ul className="space-y-2 max-w-2xl mx-auto">
+              <li className="flex items-start">
+                <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <span className="ml-3 text-sm">Use a full-body photo with a neutral pose and even lighting</span>
+              </li>
+              <li className="flex items-start">
+                <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <span className="ml-3 text-sm">A solid background works best for accurate results</span>
+              </li>
+              <li className="flex items-start">
+                <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <span className="ml-3 text-sm">Wear form-fitting clothes for the most accurate outfit simulation</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
