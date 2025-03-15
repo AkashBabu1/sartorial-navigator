@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import OutfitMatcher from '@/components/OutfitMatcher';
 import { ClothingItem } from '@/components/WardrobeGrid';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { Upload, Plus, Tshirt, Briefcase, Wine } from 'lucide-react';
+import { Upload, Plus, Shirt, Briefcase, Wine } from 'lucide-react';
 
 const Outfits = () => {
   const [wardrobe, setWardrobe] = useState<ClothingItem[]>([]);
@@ -30,7 +29,7 @@ const Outfits = () => {
   }, []);
 
   const filters = [
-    { id: 'all', label: 'All Outfits', icon: <Tshirt className="h-4 w-4 mr-2" /> },
+    { id: 'all', label: 'All Outfits', icon: <Shirt className="h-4 w-4 mr-2" /> },
     { id: 'casual', label: 'Casual', icon: <Wine className="h-4 w-4 mr-2" /> },
     { id: 'formal', label: 'Formal', icon: <Briefcase className="h-4 w-4 mr-2" /> }
   ];
