@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import AnimatedNavbar from '@/components/AnimatedNavbar';
 import { Button } from '@/components/ui/button';
@@ -72,9 +71,10 @@ const VirtualTryOn = () => {
     }, 2000);
   };
 
-  const handleModelDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length) {
-      const file = acceptedFiles[0];
+  // Fix the acceptedFiles parameter to be a change event instead
+  const handleModelDrop = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
       setModelImage(URL.createObjectURL(file));
       toast({
         title: "Image uploaded",
@@ -83,9 +83,10 @@ const VirtualTryOn = () => {
     }
   }, [toast]);
 
-  const handleOutfitDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length) {
-      const file = acceptedFiles[0];
+  // Fix the acceptedFiles parameter to be a change event instead
+  const handleOutfitDrop = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
       setSelectedOutfit(URL.createObjectURL(file));
       toast({
         title: "Outfit uploaded",
@@ -117,10 +118,24 @@ const VirtualTryOn = () => {
     
     if (type === 'model') {
       setIsDraggingModel(false);
-      handleModelDrop(files);
+      if (files.length > 0) {
+        const file = files[0];
+        setModelImage(URL.createObjectURL(file));
+        toast({
+          title: "Image uploaded",
+          description: "Your photo has been uploaded successfully.",
+        });
+      }
     } else {
       setIsDraggingOutfit(false);
-      handleOutfitDrop(files);
+      if (files.length > 0) {
+        const file = files[0];
+        setSelectedOutfit(URL.createObjectURL(file));
+        toast({
+          title: "Outfit uploaded",
+          description: "Your outfit has been uploaded successfully.",
+        });
+      }
     }
   };
 
