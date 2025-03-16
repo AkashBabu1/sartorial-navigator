@@ -139,48 +139,6 @@ const VirtualTryOn = () => {
     }
   };
 
-  const OutfitDragAndDrop = () => {
-    return (
-      <div className="mt-12 glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "350ms" }}>
-        <h2 className="text-xl font-semibold mb-4 text-center">Upload Your Own Outfit</h2>
-        <p className="text-muted-foreground mb-6 text-center max-w-2xl mx-auto">
-          Don't see an outfit you like? Upload your own clothing items and our AI will help you visualize how they would look when worn.
-        </p>
-        
-        <div 
-          className={cn(
-            "drop-area p-8 flex flex-col items-center justify-center min-h-[200px] text-center transition-all",
-            isDraggingOutfit && "drop-area-active"
-          )}
-          onDragOver={(e) => handleDragOver(e, 'outfit')}
-          onDragLeave={() => handleDragLeave('outfit')}
-          onDrop={(e) => handleDrop(e, 'outfit')}
-        >
-          <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-            <Upload className="h-8 w-8 text-primary/70" />
-          </div>
-          
-          <h3 className="font-medium mb-2">Drag & Drop Outfit Image</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Upload individual clothing items or complete outfits
-          </p>
-          
-          <div>
-            <Button variant="outline" className="relative">
-              <input 
-                type="file" 
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                accept="image/*"
-                onChange={handleOutfitDrop}
-              />
-              Browse Files
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="min-h-screen pb-20">
       <AnimatedNavbar />
@@ -199,7 +157,9 @@ const VirtualTryOn = () => {
           </p>
         </div>
         
+        {/* Modified layout: Two columns side by side for uploads and processing */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          {/* First column: Upload Your Photo */}
           <div className="glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "100ms" }}>
             <h2 className="text-xl font-semibold mb-4">Upload Your Photo</h2>
             <p className="text-muted-foreground mb-6">
@@ -242,10 +202,12 @@ const VirtualTryOn = () => {
             </div>
           </div>
           
+          {/* Second column: Upload Your Outfit */}
           <div className="glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "200ms" }}>
-            <h2 className="text-xl font-semibold mb-4">Try On Outfits</h2>
+            <h2 className="text-xl font-semibold mb-4">Upload Your Outfit</h2>
             <p className="text-muted-foreground mb-6">
-              Select an outfit from your generated combinations or choose individual items to visualize how they would look on you.
+              Upload your own clothing items and our AI will help you visualize 
+              how they would look when worn.
             </p>
             
             <div 
@@ -270,28 +232,43 @@ const VirtualTryOn = () => {
               )}
             </div>
             
-            <div className="text-center">
-              <Button 
-                onClick={handleTryOn} 
-                disabled={!modelImage || isProcessing || !selectedOutfit}
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-                    Processing...
-                  </>
-                ) : "Try On Outfit"}
+            <div className="flex items-center justify-center">
+              <Button className="relative" variant="outline">
+                <input 
+                  type="file" 
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  accept="image/*"
+                  onChange={handleOutfitDrop}
+                />
+                Upload Outfit
               </Button>
-              
-              <p className="text-xs text-muted-foreground mt-4">
-                Premium feature: Virtual try-on is available to premium subscribers with enhanced accuracy and additional customization options.
-              </p>
             </div>
           </div>
         </div>
         
+        {/* Try On Action Section */}
+        <div className="mt-8 text-center animate-fade-up" style={{ animationDelay: "300ms" }}>
+          <Button 
+            onClick={handleTryOn} 
+            disabled={!modelImage || isProcessing || !selectedOutfit}
+            size="lg"
+            className="mx-auto"
+          >
+            {isProcessing ? (
+              <>
+                <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+                Processing...
+              </>
+            ) : "Try On Outfit"}
+          </Button>
+          
+          <p className="text-xs text-muted-foreground mt-4 max-w-md mx-auto">
+            Premium feature: Virtual try-on is available to premium subscribers with enhanced accuracy and additional customization options.
+          </p>
+        </div>
+        
         {/* Outfit Selection Carousel */}
-        <div className="mt-12 animate-fade-up" style={{ animationDelay: "300ms" }}>
+        <div className="mt-12 animate-fade-up" style={{ animationDelay: "350ms" }}>
           <h2 className="text-xl font-semibold mb-6">Select an Outfit</h2>
           
           <Carousel className="w-full">
@@ -316,9 +293,6 @@ const VirtualTryOn = () => {
             </div>
           </Carousel>
         </div>
-        
-        {/* Drag and Drop Outfit Upload Area */}
-        <OutfitDragAndDrop />
         
         {/* How It Works Section */}
         <div className="mt-16 glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "400ms" }}>
