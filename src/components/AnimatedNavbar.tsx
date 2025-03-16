@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Home, Shirt, Camera, Heart, Menu, X } from 'lucide-react';
+import AuthModal from './AuthModal';
 
 interface NavItem {
   path: string;
@@ -24,6 +25,7 @@ const AnimatedNavbar: React.FC = () => {
   const [activeTab, setActiveTab] = useState(location.pathname);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
     setActiveTab(location.pathname);
@@ -41,6 +43,10 @@ const AnimatedNavbar: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleGetStarted = () => {
+    setIsAuthModalOpen(true);
+  };
 
   return (
     <nav
@@ -78,7 +84,7 @@ const AnimatedNavbar: React.FC = () => {
                   
                   {isActive && (
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-gradient-to-r from-background/80 to-background/40 backdrop-blur-md border border-white/10 shadow-md"
+                      className="absolute inset-0 rounded-full"
                       layoutId="navbar-pill"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -89,7 +95,14 @@ const AnimatedNavbar: React.FC = () => {
                         damping: 12 
                       }}
                     >
-                      <div className="absolute inset-0 opacity-20 rounded-full bg-primary blur-sm" />
+                      {/* Tubelight glowing effect */}
+                      <div className="absolute inset-0 rounded-full overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-background/40 backdrop-blur-md border border-white/10 shadow-md" />
+                        <div className="absolute inset-0 opacity-20 rounded-full bg-primary blur-sm" />
+                        <div className="absolute inset-0 rounded-full bg-primary/5" />
+                        <div className="absolute -inset-[1px] rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-transparent blur-sm" />
+                        <div className="absolute -bottom-1 left-0 right-0 h-1 bg-primary/50 blur-sm" />
+                      </div>
                     </motion.div>
                   )}
                 </Link>
@@ -154,11 +167,14 @@ const AnimatedNavbar: React.FC = () => {
             className="hidden md:inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={handleGetStarted}
           >
             Get Started
           </motion.button>
         </div>
       </div>
+
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </nav>
   );
 };

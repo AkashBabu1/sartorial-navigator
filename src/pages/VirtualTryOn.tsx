@@ -1,16 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
+import React, { useState, useEffect, useCallback } from 'react';
+import AnimatedNavbar from '@/components/AnimatedNavbar';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { ChevronRight, Camera, Shirt, User } from 'lucide-react';
+import { ChevronRight, Camera, Shirt, User, Upload } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const VirtualTryOn = () => {
   const [modelImage, setModelImage] = useState<string | null>(null);
   const [selectedOutfit, setSelectedOutfit] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [outfits, setOutfits] = useState<{ id: string, name: string, image: string }[]>([]);
+  const [isDraggingModel, setIsDraggingModel] = useState(false);
+  const [isDraggingOutfit, setIsDraggingOutfit] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -69,9 +72,103 @@ const VirtualTryOn = () => {
     }, 2000);
   };
 
+  const handleModelDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles.length) {
+      const file = acceptedFiles[0];
+      setModelImage(URL.createObjectURL(file));
+      toast({
+        title: "Image uploaded",
+        description: "Your photo has been uploaded successfully.",
+      });
+    }
+  }, [toast]);
+
+  const handleOutfitDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles.length) {
+      const file = acceptedFiles[0];
+      setSelectedOutfit(URL.createObjectURL(file));
+      toast({
+        title: "Outfit uploaded",
+        description: "Your outfit has been uploaded successfully.",
+      });
+    }
+  }, [toast]);
+
+  const handleDragOver = (e: React.DragEvent, type: 'model' | 'outfit') => {
+    e.preventDefault();
+    if (type === 'model') {
+      setIsDraggingModel(true);
+    } else {
+      setIsDraggingOutfit(true);
+    }
+  };
+
+  const handleDragLeave = (type: 'model' | 'outfit') => {
+    if (type === 'model') {
+      setIsDraggingModel(false);
+    } else {
+      setIsDraggingOutfit(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, type: 'model' | 'outfit') => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    
+    if (type === 'model') {
+      setIsDraggingModel(false);
+      handleModelDrop(files);
+    } else {
+      setIsDraggingOutfit(false);
+      handleOutfitDrop(files);
+    }
+  };
+
+  const OutfitDragAndDrop = () => {
+    return (
+      <div className="mt-12 glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "350ms" }}>
+        <h2 className="text-xl font-semibold mb-4 text-center">Upload Your Own Outfit</h2>
+        <p className="text-muted-foreground mb-6 text-center max-w-2xl mx-auto">
+          Don't see an outfit you like? Upload your own clothing items and our AI will help you visualize how they would look when worn.
+        </p>
+        
+        <div 
+          className={cn(
+            "drop-area p-8 flex flex-col items-center justify-center min-h-[200px] text-center transition-all",
+            isDraggingOutfit && "drop-area-active"
+          )}
+          onDragOver={(e) => handleDragOver(e, 'outfit')}
+          onDragLeave={() => handleDragLeave('outfit')}
+          onDrop={(e) => handleDrop(e, 'outfit')}
+        >
+          <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+            <Upload className="h-8 w-8 text-primary/70" />
+          </div>
+          
+          <h3 className="font-medium mb-2">Drag & Drop Outfit Image</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            Upload individual clothing items or complete outfits
+          </p>
+          
+          <div>
+            <Button variant="outline" className="relative">
+              <input 
+                type="file" 
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                accept="image/*"
+                onChange={handleOutfitDrop}
+              />
+              Browse Files
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen pb-20">
-      <Navbar />
+      <AnimatedNavbar />
       
       <div className="max-w-7xl mx-auto px-6 pt-24">
         <div className="text-center mb-12 animate-fade-up">
@@ -95,7 +192,15 @@ const VirtualTryOn = () => {
               Your photo is processed securely and never shared with third parties.
             </p>
             
-            <div className="aspect-[3/4] bg-muted rounded-lg overflow-hidden mb-4 flex items-center justify-center">
+            <div 
+              className={cn(
+                "aspect-[3/4] bg-muted rounded-lg overflow-hidden mb-4 flex items-center justify-center drop-area",
+                isDraggingModel && "drop-area-active"
+              )}
+              onDragOver={(e) => handleDragOver(e, 'model')}
+              onDragLeave={() => handleDragLeave('model')}
+              onDrop={(e) => handleDrop(e, 'model')}
+            >
               {modelImage ? (
                 <img src={modelImage} alt="Your model" className="w-full h-full object-cover" />
               ) : (
@@ -103,7 +208,8 @@ const VirtualTryOn = () => {
                   <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-muted-foreground/10 flex items-center justify-center">
                     <User className="h-8 w-8 text-muted-foreground/50" />
                   </div>
-                  <p className="text-sm text-muted-foreground">Upload a full-body photo</p>
+                  <p className="text-sm text-muted-foreground mb-4">Upload a full-body photo</p>
+                  <p className="text-xs text-muted-foreground">Drag & drop your photo here</p>
                 </div>
               )}
             </div>
@@ -127,7 +233,15 @@ const VirtualTryOn = () => {
               Select an outfit from your generated combinations or choose individual items to visualize how they would look on you.
             </p>
             
-            <div className="aspect-[3/4] bg-muted rounded-lg overflow-hidden mb-4 flex items-center justify-center">
+            <div 
+              className={cn(
+                "aspect-[3/4] bg-muted rounded-lg overflow-hidden mb-4 flex items-center justify-center drop-area",
+                isDraggingOutfit && "drop-area-active"
+              )}
+              onDragOver={(e) => handleDragOver(e, 'outfit')}
+              onDragLeave={() => handleDragLeave('outfit')}
+              onDrop={(e) => handleDrop(e, 'outfit')}
+            >
               {selectedOutfit ? (
                 <img src={selectedOutfit} alt="Virtual try-on" className="w-full h-full object-cover" />
               ) : (
@@ -135,7 +249,8 @@ const VirtualTryOn = () => {
                   <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-muted-foreground/10 flex items-center justify-center">
                     <Shirt className="h-8 w-8 text-muted-foreground/50" />
                   </div>
-                  <p className="text-sm text-muted-foreground">Outfit visualization will appear here</p>
+                  <p className="text-sm text-muted-foreground mb-4">Outfit visualization will appear here</p>
+                  <p className="text-xs text-muted-foreground">Drag & drop an outfit image here</p>
                 </div>
               )}
             </div>
@@ -186,6 +301,9 @@ const VirtualTryOn = () => {
             </div>
           </Carousel>
         </div>
+        
+        {/* Drag and Drop Outfit Upload Area */}
+        <OutfitDragAndDrop />
         
         {/* How It Works Section */}
         <div className="mt-16 glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "400ms" }}>

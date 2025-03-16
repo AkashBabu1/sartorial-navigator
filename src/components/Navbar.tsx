@@ -2,9 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import AuthModal from './AuthModal';
+import { Menu } from 'lucide-react';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const location = useLocation();
   
   useEffect(() => {
@@ -28,6 +32,10 @@ const Navbar = () => {
     { name: 'Virtual Try-On', path: '/virtual-try-on' },
   ];
 
+  const handleGetStarted = () => {
+    setIsAuthModalOpen(true);
+  };
+
   return (
     <nav
       className={cn(
@@ -43,47 +51,65 @@ const Navbar = () => {
         </Link>
 
         <div className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={cn(
-                'text-sm font-medium transition-colors hover:text-primary',
-                location.pathname === link.path 
-                  ? 'text-primary' 
-                  : 'text-muted-foreground'
-              )}
-            >
-              {link.name}
-            </Link>
-          ))}
+          <div className="relative flex items-center bg-black/5 backdrop-blur-sm rounded-full p-1.5">
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.path;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={cn(
+                    'relative z-10 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200',
+                    isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  <span className="relative z-10">{link.name}</span>
+                  
+                  {isActive && (
+                    <motion.div
+                      className="absolute inset-0 rounded-full"
+                      layoutId="navbar-pill"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ 
+                        type: "spring", 
+                        bounce: 0.25, 
+                        stiffness: 130, 
+                        damping: 12 
+                      }}
+                    >
+                      <div className="absolute inset-0 rounded-full overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-background/40 backdrop-blur-md border border-white/10 shadow-md" />
+                        <div className="absolute inset-0 opacity-20 rounded-full bg-primary blur-sm" />
+                        <div className="absolute inset-0 rounded-full bg-primary/5" />
+                        <div className="absolute -inset-[1px] rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-transparent blur-sm" />
+                        <div className="absolute -bottom-1 left-0 right-0 h-1 bg-primary/50 blur-sm" />
+                      </div>
+                    </motion.div>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
         <div className="flex items-center space-x-4">
-          <button className="hidden md:inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+          <motion.button 
+            className="hidden md:inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleGetStarted}
+          >
             Get Started
-          </button>
+          </motion.button>
           
           <button className="md:hidden rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-5 w-5"
-            >
-              <line x1="4" x2="20" y1="12" y2="12" />
-              <line x1="4" x2="20" y1="6" y2="6" />
-              <line x1="4" x2="20" y1="18" y2="18" />
-            </svg>
+            <Menu className="h-5 w-5" />
           </button>
         </div>
       </div>
+      
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </nav>
   );
 };
