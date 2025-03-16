@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import AnimatedNavbar from '@/components/AnimatedNavbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,7 +18,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useForm } from 'react-hook-form';
 import { ClothingItem } from '@/components/WardrobeGrid';
 import { matchOutfits } from '@/utils/colorUtils';
-import { Palette, Ruler, Wind, User, ChevronDown } from 'lucide-react';
+import { Palette, Ruler, Wind, User, ChevronDown, Heart } from 'lucide-react';
 
 interface UserTraits {
   colorPreference: string;
