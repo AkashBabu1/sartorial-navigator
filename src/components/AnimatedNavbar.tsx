@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Home, Shirt, Camera, Heart, Menu, X } from 'lucide-react';
 
@@ -50,7 +50,7 @@ const AnimatedNavbar: React.FC = () => {
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/" className="flex items-center">
+        <Link to="/" className="flex items-center z-10">
           <span className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500">
             OutfitAI
           </span>
@@ -72,8 +72,8 @@ const AnimatedNavbar: React.FC = () => {
                   onClick={() => setActiveTab(item.path)}
                 >
                   <span className="relative z-10 flex items-center gap-1.5">
-                    <span className="hidden sm:inline-block">{item.icon}</span>
-                    <span>{item.label}</span>
+                    {item.icon}
+                    <span className="hidden sm:inline-block">{item.label}</span>
                   </span>
                   
                   {isActive && (
@@ -100,8 +100,9 @@ const AnimatedNavbar: React.FC = () => {
 
         {/* Mobile Navigation Button */}
         <button 
-          className="md:hidden rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+          className="md:hidden rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground z-10"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
         >
           {isMobileMenuOpen ? (
             <X className="h-5 w-5" />
@@ -111,45 +112,51 @@ const AnimatedNavbar: React.FC = () => {
         </button>
 
         {/* Mobile Navigation Menu */}
-        {isMobileMenuOpen && (
-          <motion.div 
-            className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-gray-200 shadow-lg md:hidden"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="px-4 py-3 space-y-1">
-              {navItems.map((item) => {
-                const isActive = activeTab === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      'flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                      isActive 
-                        ? 'bg-primary/10 text-primary' 
-                        : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                    )}
-                    onClick={() => {
-                      setActiveTab(item.path);
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    <span className="mr-2">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-gray-200 shadow-lg md:hidden"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="px-4 py-3 space-y-1">
+                {navItems.map((item) => {
+                  const isActive = activeTab === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={cn(
+                        'flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                        isActive 
+                          ? 'bg-primary/10 text-primary' 
+                          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                      )}
+                      onClick={() => {
+                        setActiveTab(item.path);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      <span className="mr-2">{item.icon}</span>
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="hidden md:flex items-center space-x-4">
-          <button className="hidden md:inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+          <motion.button 
+            className="hidden md:inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             Get Started
-          </button>
+          </motion.button>
         </div>
       </div>
     </nav>

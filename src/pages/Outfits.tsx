@@ -5,8 +5,7 @@ import OutfitMatcher from '@/components/OutfitMatcher';
 import { ClothingItem } from '@/components/WardrobeGrid';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { Upload, Plus, Shirt, Briefcase, Wine, Camera, Zap, Heart, Lightbulb } from 'lucide-react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Upload, Plus, Shirt, Briefcase, Wine, Camera } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 
@@ -16,7 +15,6 @@ const Outfits = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [showUploadModal, setShowUploadModal] = useState(false);
   const { toast } = useToast();
-  const carouselRef = useRef<HTMLDivElement>(null);
   const howItWorksRef = useRef<HTMLDivElement>(null);
   const isHowItWorksInView = useInView(howItWorksRef, { once: true });
   
@@ -35,22 +33,6 @@ const Outfits = () => {
     setLoading(false);
   }, []);
 
-  // Auto-scroll carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (carouselRef.current) {
-        const carousel = carouselRef.current;
-        // Check if there is a "next" control and simulate a click
-        const nextButton = carousel.querySelector('[data-carousel-next]') as HTMLElement;
-        if (nextButton) {
-          nextButton.click();
-        }
-      }
-    }, 5000); // Auto-scroll every 5 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
   const filters = [
     { id: 'all', label: 'All Outfits', icon: <Shirt className="h-4 w-4 mr-2" /> },
     { id: 'casual', label: 'Casual', icon: <Wine className="h-4 w-4 mr-2" /> },
@@ -65,34 +47,6 @@ const Outfits = () => {
       description: "This would allow you to upload a new clothing item.",
     });
   };
-
-  // Key features for the carousel
-  const keyFeatures = [
-    {
-      title: "AI-Powered Matching",
-      description: "Our intelligent algorithm combines color theory and style rules to create perfect outfit combinations.",
-      icon: <Zap className="h-10 w-10 text-primary" />,
-      link: "/outfits"
-    },
-    {
-      title: "Smart Wardrobe Management",
-      description: "Organize and categorize all your clothing items in one place with intelligent tagging.",
-      icon: <Shirt className="h-10 w-10 text-primary" />,
-      link: "/wardrobe"
-    },
-    {
-      title: "Virtual Try-On",
-      description: "Visualize how outfits would look on you with our advanced AI technology.",
-      icon: <Camera className="h-10 w-10 text-primary" />,
-      link: "/virtual-try-on"
-    },
-    {
-      title: "Style Recommendations",
-      description: "Get personalized style advice based on your preferences and trending fashion.",
-      icon: <Heart className="h-10 w-10 text-primary" />,
-      link: "/outfits"
-    }
-  ];
 
   // Staggered animation variants
   const container = {
@@ -130,59 +84,6 @@ const Outfits = () => {
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Create perfect outfit matches based on color theory and style principles.
           </p>
-        </div>
-        
-        {/* Key Features Carousel */}
-        <div className="mb-12 animate-fade-up" style={{ animationDelay: "50ms" }} ref={carouselRef}>
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold">Key Features</h2>
-          </div>
-          
-          <Carousel className="w-full max-w-5xl mx-auto">
-            <CarouselContent>
-              {keyFeatures.map((feature, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                  <motion.div 
-                    className="glass-card p-6 rounded-lg h-full flex flex-col items-center text-center"
-                    whileHover={{ 
-                      scale: 1.03, 
-                      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)" 
-                    }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  >
-                    <motion.div 
-                      className="mb-4 bg-primary/10 p-3 rounded-full"
-                      initial={{ scale: 0.8 }}
-                      animate={{ scale: [0.8, 1.2, 1] }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      {feature.icon}
-                    </motion.div>
-                    <h3 className="text-lg font-medium mb-2">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
-                    <Link 
-                      to={feature.link} 
-                      className="mt-4 text-primary hover:underline text-sm font-medium inline-flex items-center"
-                    >
-                      Try it now
-                      <motion.div
-                        className="ml-1"
-                        variants={arrowVariants}
-                        initial="initial"
-                        animate="animate"
-                      >
-                        →
-                      </motion.div>
-                    </Link>
-                  </motion.div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="flex justify-center mt-4">
-              <CarouselPrevious className="relative static mx-2 transform-none translate-y-0 left-0" data-carousel-prev />
-              <CarouselNext className="relative static mx-2 transform-none translate-y-0 right-0" data-carousel-next />
-            </div>
-          </Carousel>
         </div>
         
         <motion.div 
