@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import AnimatedNavbar from '@/components/AnimatedNavbar';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { ChevronRight, Camera, Shirt, User, Upload } from 'lucide-react';
+import { ChevronRight, Camera, Shirt, User, Upload, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const VirtualTryOn = () => {
@@ -13,6 +13,7 @@ const VirtualTryOn = () => {
   const [outfits, setOutfits] = useState<{ id: string, name: string, image: string }[]>([]);
   const [isDraggingModel, setIsDraggingModel] = useState(false);
   const [isDraggingOutfit, setIsDraggingOutfit] = useState(false);
+  const [resultImage, setResultImage] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -59,10 +60,22 @@ const VirtualTryOn = () => {
       return;
     }
     
+    if (!modelImage) {
+      toast({
+        title: "No model image",
+        description: "Please upload your photo first.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setIsProcessing(true);
     
     // Simulate processing time
     setTimeout(() => {
+      // Set the result image - in a real app, this would be the AI-generated image
+      // For now we'll use the model image as a placeholder for the result
+      setResultImage(modelImage);
       setIsProcessing(false);
       toast({
         title: "Virtual Try-On Complete",
@@ -71,7 +84,6 @@ const VirtualTryOn = () => {
     }, 2000);
   };
 
-  // Fix the acceptedFiles parameter to be a change event instead
   const handleModelDrop = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -83,7 +95,6 @@ const VirtualTryOn = () => {
     }
   }, [toast]);
 
-  // Fix the acceptedFiles parameter to be a change event instead
   const handleOutfitDrop = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -157,8 +168,8 @@ const VirtualTryOn = () => {
           </p>
         </div>
         
-        {/* Modified layout: Two columns side by side for uploads and processing */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+        {/* Modified layout: Three columns side by side for uploads and result */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
           {/* First column: Upload Your Photo */}
           <div className="glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "100ms" }}>
             <h2 className="text-xl font-semibold mb-4">Upload Your Photo</h2>
@@ -220,7 +231,7 @@ const VirtualTryOn = () => {
               onDrop={(e) => handleDrop(e, 'outfit')}
             >
               {selectedOutfit ? (
-                <img src={selectedOutfit} alt="Virtual try-on" className="w-full h-full object-cover" />
+                <img src={selectedOutfit} alt="Selected outfit" className="w-full h-full object-cover" />
               ) : (
                 <div className="text-center p-6">
                   <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-muted-foreground/10 flex items-center justify-center">
@@ -244,10 +255,46 @@ const VirtualTryOn = () => {
               </Button>
             </div>
           </div>
+          
+          {/* Third column: Virtual Try-On Result (only visible after processing) */}
+          {(resultImage || isProcessing) && (
+            <div className="glass-card p-6 rounded-lg animate-fade-up" style={{ animationDelay: "300ms" }}>
+              <h2 className="text-xl font-semibold mb-4">Virtual Try-On Result</h2>
+              <p className="text-muted-foreground mb-6">
+                Here's how the selected outfit would look on you. Our AI technology
+                creates a realistic visualization of the clothing on your body.
+              </p>
+              
+              <div className="aspect-[3/4] bg-muted rounded-lg overflow-hidden mb-4 flex items-center justify-center">
+                {isProcessing ? (
+                  <div className="text-center p-6">
+                    <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Loader className="h-8 w-8 text-primary animate-spin" />
+                    </div>
+                    <p className="text-sm font-medium mb-2">Processing...</p>
+                    <p className="text-xs text-muted-foreground">
+                      Our AI is creating your virtual try-on
+                    </p>
+                  </div>
+                ) : resultImage ? (
+                  <img src={resultImage} alt="Virtual try-on result" className="w-full h-full object-cover" />
+                ) : null}
+              </div>
+              
+              <div className="flex items-center justify-center space-x-3">
+                <Button variant="outline">
+                  Save Result
+                </Button>
+                <Button variant="secondary">
+                  Try Another Outfit
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
         
-        {/* Try On Action Section */}
-        <div className="mt-8 text-center animate-fade-up" style={{ animationDelay: "300ms" }}>
+        {/* Try On Action Section - Now centered below the columns */}
+        <div className="mt-8 text-center animate-fade-up" style={{ animationDelay: "350ms" }}>
           <Button 
             onClick={handleTryOn} 
             disabled={!modelImage || isProcessing || !selectedOutfit}
