@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Wardrobe from "./pages/Wardrobe";
 import Outfits from "./pages/Outfits";
+import Recommendations from "./pages/Recommendations";
 import VirtualTryOn from "./pages/VirtualTryOn";
 import NotFound from "./pages/NotFound";
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/wardrobe" element={<Wardrobe />} />
           <Route path="/outfits" element={<Outfits />} />
+          <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/virtual-try-on" element={<VirtualTryOn />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

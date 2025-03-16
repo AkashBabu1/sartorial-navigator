@@ -15,6 +15,7 @@ const navItems: NavItem[] = [
   { path: '/', label: 'Home', icon: <Home className="h-5 w-5" /> },
   { path: '/wardrobe', label: 'Wardrobe', icon: <Shirt className="h-5 w-5" /> },
   { path: '/outfits', label: 'Outfits', icon: <Shirt className="h-5 w-5" /> },
+  { path: '/recommendations', label: 'Recommendations', icon: <Heart className="h-5 w-5" /> },
   { path: '/virtual-try-on', label: 'Virtual Try-On', icon: <Camera className="h-5 w-5" /> },
 ];
 
