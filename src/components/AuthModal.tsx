@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { User } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -23,7 +25,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     // This would be replaced with actual authentication logic in a real app
     toast({
       title: isSignIn ? "Sign In Successful" : "Account Created",
-      description: "This is a demo. In a real app, you would be authenticated now.",
+      description: isSignIn 
+        ? "This is a demo. In a real app, you would be authenticated now."
+        : `Account created for ${name}. This is a demo. In a real app, you would be authenticated now.`,
     });
     
     onClose();
@@ -44,6 +48,24 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
+          {!isSignIn && (
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                <Input 
+                  id="name" 
+                  type="text" 
+                  placeholder="Your name" 
+                  required={!isSignIn}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+          )}
+          
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input 
