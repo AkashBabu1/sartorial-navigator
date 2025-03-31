@@ -63,8 +63,8 @@ const AnimatedNavbar: React.FC = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:block">
-          <div className="relative flex items-center bg-black/5 backdrop-blur-sm rounded-full p-1.5">
+        <div className="hidden md:flex items-center justify-center flex-1">
+          <div className="flex items-center bg-black/5 backdrop-blur-sm rounded-full p-1.5">
             {navItems.map((item) => {
               const isActive = activeTab === item.path;
               return (
@@ -72,15 +72,13 @@ const AnimatedNavbar: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    'relative z-10 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200',
+                    'relative rounded-full px-4 py-2 flex items-center gap-2 text-sm font-medium transition-colors duration-200',
                     isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                   )}
                   onClick={() => setActiveTab(item.path)}
                 >
-                  <span className="relative z-10 flex items-center gap-1.5">
-                    {item.icon}
-                    <span className="hidden sm:inline-block">{item.label}</span>
-                  </span>
+                  {item.icon}
+                  <span>{item.label}</span>
                   
                   {isActive && (
                     <motion.div
