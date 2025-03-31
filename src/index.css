@@ -197,3 +197,30 @@
     background-position: 0% 50%;
   }
 }
+
+/* Button border animations */
+@keyframes border-flow {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%;
+  }
+}
+
+@keyframes border-flow-reverse {
+  0% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.animate-border-flow {
+  animation: border-flow 3s linear infinite;
+}
+
+.animate-border-flow-reverse {
+  animation: border-flow-reverse 3s linear infinite;
+}

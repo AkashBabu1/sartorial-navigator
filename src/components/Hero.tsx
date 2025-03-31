@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthModal from './AuthModal';
+import { Button } from './ui/button';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -83,12 +84,21 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start pt-4">
             <button
               onClick={handleGetStarted}
-              className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              className="relative inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring overflow-hidden group"
             >
-              Get Started
+              <span className="relative z-10">Get Started</span>
+              <span className="absolute inset-0 overflow-hidden rounded-md">
+                <span className="absolute inset-0 rounded-md animate-border-flow bg-gradient-to-r from-blue-400 via-primary to-blue-600 bg-[length:400%_100%]"></span>
+              </span>
+              <span className="absolute inset-[2px] bg-primary rounded-md transition-colors group-hover:bg-primary/90"></span>
             </button>
-            <Link to="/outfits" className="inline-flex h-12 items-center justify-center rounded-md border border-input bg-background px-6 font-medium text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-              Explore Outfits
+            
+            <Link to="/outfits" className="relative inline-flex h-12 items-center justify-center rounded-md bg-background px-6 font-medium border border-input text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring overflow-hidden group">
+              <span className="relative z-10">Explore Outfits</span>
+              <span className="absolute inset-0 overflow-hidden rounded-md opacity-0 group-hover:opacity-100">
+                <span className="absolute inset-0 rounded-md animate-border-flow-reverse bg-gradient-to-r from-blue-400 via-primary to-blue-600 bg-[length:400%_100%]"></span>
+              </span>
+              <span className="absolute inset-[2px] bg-background rounded-md transition-colors group-hover:bg-accent"></span>
             </Link>
           </div>
         </div>

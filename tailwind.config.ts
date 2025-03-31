@@ -109,6 +109,14 @@ export default {
 				pulse: {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.8' }
+				},
+				'border-flow': {
+					'0%': { backgroundPosition: '0% 0%' },
+					'100%': { backgroundPosition: '100% 0%' }
+				},
+				'border-flow-reverse': {
+					'0%': { backgroundPosition: '100% 0%' },
+					'100%': { backgroundPosition: '0% 0%' }
 				}
 			},
 			animation: {
@@ -120,6 +128,8 @@ export default {
 				'slide-in-left': 'slide-in-left 0.7s ease-out',
 				'float': 'float 6s ease-in-out infinite',
 				'pulse': 'pulse 3s ease-in-out infinite',
+				'border-flow': 'border-flow 3s linear infinite',
+				'border-flow-reverse': 'border-flow-reverse 3s linear infinite'
 			}
 		}
 	},
