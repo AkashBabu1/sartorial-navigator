@@ -44,6 +44,18 @@ const Hero = () => {
     };
   }, []);
 
+  // Clothing item images for the AI suggestions
+  const clothingItems = {
+    shirts: [
+      '/lovable-uploads/9520bb0b-42fc-4143-88e8-83a9e0c182ca.png',
+      '/public/placeholder.svg',
+    ],
+    pants: [
+      '/public/placeholder.svg',
+      '/public/placeholder.svg',
+    ],
+  };
+
   return (
     <div ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-32 px-4 md:px-0">
       {/* Background elements */}
@@ -94,10 +106,18 @@ const Hero = () => {
                   </div>
                   
                   <div className="grid grid-cols-2 gap-2 p-4 flex-grow">
-                    <div className="bg-white rounded-lg shadow-sm aspect-[3/4] animate-pulse"></div>
-                    <div className="bg-white rounded-lg shadow-sm aspect-[3/4] animate-pulse" style={{animationDelay: '0.2s'}}></div>
-                    <div className="bg-white rounded-lg shadow-sm aspect-[3/4] animate-pulse" style={{animationDelay: '0.3s'}}></div>
-                    <div className="bg-white rounded-lg shadow-sm aspect-[3/4] animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                    <div className="bg-white rounded-lg shadow-sm aspect-[3/4] overflow-hidden">
+                      <img src={clothingItems.shirts[0]} alt="Shirt" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="bg-white rounded-lg shadow-sm aspect-[3/4] overflow-hidden">
+                      <img src={clothingItems.pants[0]} alt="Pants" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="bg-white rounded-lg shadow-sm aspect-[3/4] overflow-hidden">
+                      <img src={clothingItems.shirts[1]} alt="Shirt alternative" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="bg-white rounded-lg shadow-sm aspect-[3/4] overflow-hidden">
+                      <img src={clothingItems.pants[1]} alt="Pants alternative" className="w-full h-full object-cover" />
+                    </div>
                   </div>
                   
                   <div className="p-4 border-t border-gray-100">
