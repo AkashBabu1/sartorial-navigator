@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import AuthModal from './AuthModal';
-import { Menu } from 'lucide-react';
+import { Menu, Home, Shirt, Heart, Camera } from 'lucide-react';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -25,11 +25,11 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Wardrobe', path: '/wardrobe' },
-    { name: 'Outfits', path: '/outfits' },
-    { name: 'Recommendations', path: '/recommendations' },
-    { name: 'Virtual Try-On', path: '/virtual-try-on' },
+    { name: 'Home', path: '/', icon: <Home className="h-5 w-5" /> },
+    { name: 'Wardrobe', path: '/wardrobe', icon: <Shirt className="h-5 w-5" /> },
+    { name: 'Outfits', path: '/outfits', icon: <Shirt className="h-5 w-5" /> },
+    { name: 'Recommendations', path: '/recommendations', icon: <Heart className="h-5 w-5" /> },
+    { name: 'Virtual Try-On', path: '/virtual-try-on', icon: <Camera className="h-5 w-5" /> },
   ];
 
   const handleGetStarted = () => {
@@ -50,7 +50,7 @@ const Navbar = () => {
           </span>
         </Link>
 
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden md:flex items-center justify-center flex-1">
           <div className="relative flex items-center bg-black/5 backdrop-blur-sm rounded-full p-1.5">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
@@ -59,10 +59,11 @@ const Navbar = () => {
                   key={link.path}
                   to={link.path}
                   className={cn(
-                    'relative z-10 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200',
+                    'relative z-10 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 flex items-center gap-2',
                     isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                   )}
                 >
+                  {link.icon}
                   <span className="relative z-10">{link.name}</span>
                   
                   {isActive && (
