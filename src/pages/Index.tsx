@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -9,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Zap, Shirt, Camera, Heart, Lightbulb } from 'lucide-react';
+import { TimelineDemo } from '@/components/TimelineDemo';
 
 const Index = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -165,6 +165,7 @@ const Index = () => {
         </div>
       </section>
       
+      {/* Timeline Features Section */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -179,18 +180,7 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <FeatureCard
-                key={index}
-                title={feature.title}
-                description={feature.description}
-                icon={feature.icon}
-                className="animate-fade-up"
-                delay={feature.delay}
-              />
-            ))}
-          </div>
+          <TimelineDemo />
         </div>
       </section>
       
