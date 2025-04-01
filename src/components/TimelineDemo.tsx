@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Timeline } from "@/components/ui/timeline";
 import { Shirt, Settings, Heart } from "lucide-react";
@@ -9,7 +10,7 @@ export function TimelineDemo() {
             Our intelligent algorithm combines color theory and style rules to create perfect outfit combinations.
           </p>
           <div className="grid grid-cols-2 gap-4">
-            <img alt="AI matching example" className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Ffanaticfox.in%2Fproduct%2Fthe-little-boy-from-rosario-argentina-t-shirt%2F&psig=AOvVaw1TYQ6FnI7GXHp1sZxwea1H&ust=1743609885369000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIj2u5ebt4wDFQAAAAAdAAAAABAE" />
+            <img alt="AI matching example" className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]" src="https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
             <img src="https://images.unsplash.com/photo-1523381294911-8d3cead13475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="outfit matching" className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]" />
           </div>
         </div>

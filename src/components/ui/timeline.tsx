@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMotionValueEvent, useScroll, useTransform, motion } from "framer-motion";
@@ -14,28 +15,55 @@ export const Timeline = ({
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  
   useEffect(() => {
     if (ref.current) {
       const rect = ref.current.getBoundingClientRect();
       setHeight(rect.height);
     }
   }, [ref]);
+  
   const {
     scrollYProgress
   } = useScroll({
     target: containerRef,
     offset: ["start 10%", "end 50%"]
   });
+  
   const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
   const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
-  return <div className="w-full bg-white dark:bg-neutral-950 font-sans md:px-10" ref={containerRef}>
-      
+  
+  // Track scroll progress to determine active dot
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    // Calculate which item should be active based on scroll progress
+    const itemHeight = height / data.length;
+    const currentPosition = latest * height;
+    const newActiveIndex = Math.floor(currentPosition / itemHeight);
+    
+    if (newActiveIndex !== activeIndex && newActiveIndex < data.length) {
+      setActiveIndex(newActiveIndex);
+    }
+  });
 
+  return <div className="w-full bg-white dark:bg-neutral-950 font-sans md:px-10" ref={containerRef}>
       <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
-        {data.map((item, index) => <div key={index} className="flex justify-start pt-10 md:pt-40 md:gap-10">
+        {data.map((item, index) => (
+          <div key={index} className="flex justify-start pt-10 md:pt-40 md:gap-10">
             <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
               <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-white dark:bg-black flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 p-2" />
+                <motion.div 
+                  className={`h-4 w-4 rounded-full border border-neutral-300 dark:border-neutral-700 p-2 transition-colors duration-500`}
+                  animate={{
+                    backgroundColor: activeIndex >= index 
+                      ? 'rgb(30, 64, 175)' // dark blue when active
+                      : 'rgb(229, 231, 235)' // light gray when inactive
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    ease: "easeInOut"
+                  }}
+                />
               </div>
               <h3 className="hidden md:block text-xl md:pl-20 font-bold md:text-4xl text-black">
                 {item.title}
@@ -48,7 +76,8 @@ export const Timeline = ({
               </h3>
               {item.content}{" "}
             </div>
-          </div>)}
+          </div>
+        ))}
         <div style={{
         height: height + "px"
       }} className="absolute md:left-8 left-8 top-0 overflow-hidden w-[2px] bg-[linear-gradient(to_bottom,var(--tw-gradient-stops))] from-transparent from-[0%] via-neutral-200 dark:via-neutral-700 to-transparent to-[99%]  [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] ">
