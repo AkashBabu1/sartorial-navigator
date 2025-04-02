@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 interface Pixel {
   x: number;
@@ -16,9 +16,10 @@ interface PixelTrailProps {
 
 const PixelTrail: React.FC<PixelTrailProps> = ({ className = '' }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [pixels, setPixels] = useState<Pixel[]>([]);
+  const pixelsRef = useRef<Pixel[]>([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isActive, setIsActive] = useState(false);
+  const requestRef = useRef<number>();
 
   const colors = [
     'rgba(30, 64, 175, 1)',  // blue-700
@@ -26,6 +27,10 @@ const PixelTrail: React.FC<PixelTrailProps> = ({ className = '' }) => {
     'rgba(124, 58, 237, 1)', // purple-600
     'rgba(236, 72, 153, 1)', // pink-500
     'rgba(14, 165, 233, 1)', // sky-500
+    '#8B5CF6',              // Vivid Purple
+    '#D946EF',              // Magenta Pink
+    '#F97316',              // Bright Orange
+    '#0EA5E9',              // Ocean Blue
   ];
 
   useEffect(() => {
@@ -43,6 +48,28 @@ const PixelTrail: React.FC<PixelTrailProps> = ({ className = '' }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const addPixels = useCallback((x: number, y: number) => {
+    const newPixels = [...pixelsRef.current];
+    
+    for (let i = 0; i < 3; i++) {
+      newPixels.push({
+        x: x + (Math.random() * 20 - 10),
+        y: y + (Math.random() * 20 - 10),
+        size: Math.random() * 8 + 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1,
+        speed: Math.random() * 2 + 0.5,
+      });
+    }
+    
+    // Limit the number of pixels
+    if (newPixels.length > 150) {
+      newPixels.splice(0, newPixels.length - 150);
+    }
+    
+    pixelsRef.current = newPixels;
+  }, [colors]);
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -50,25 +77,7 @@ const PixelTrail: React.FC<PixelTrailProps> = ({ className = '' }) => {
       
       // Add new pixels on mouse move
       if (isActive) {
-        const newPixels = [...pixels];
-        
-        for (let i = 0; i < 3; i++) {
-          newPixels.push({
-            x: e.clientX + (Math.random() * 20 - 10),
-            y: e.clientY + (Math.random() * 20 - 10),
-            size: Math.random() * 8 + 2,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            alpha: 1,
-            speed: Math.random() * 2 + 0.5,
-          });
-        }
-        
-        // Limit the number of pixels
-        if (newPixels.length > 150) {
-          newPixels.splice(0, newPixels.length - 150);
-        }
-        
-        setPixels(newPixels);
+        addPixels(e.clientX, e.clientY);
       }
     };
 
@@ -83,45 +92,50 @@ const PixelTrail: React.FC<PixelTrailProps> = ({ className = '' }) => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [pixels, isActive]);
+  }, [isActive, addPixels]);
 
-  useEffect(() => {
+  const updatePixels = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    let animationFrameId: number;
     
-    const render = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Update and draw each pixel
+    const updatedPixels = pixelsRef.current.map(pixel => {
+      // Draw pixel
+      ctx.globalAlpha = pixel.alpha;
+      ctx.fillStyle = pixel.color;
+      ctx.fillRect(pixel.x - pixel.size / 2, pixel.y - pixel.size / 2, pixel.size, pixel.size);
       
-      const updatedPixels = pixels.map(pixel => {
-        // Draw pixel
-        ctx.globalAlpha = pixel.alpha;
-        ctx.fillStyle = pixel.color;
-        ctx.fillRect(pixel.x - pixel.size / 2, pixel.y - pixel.size / 2, pixel.size, pixel.size);
-        
-        // Update pixel for next frame
-        return {
-          ...pixel,
-          y: pixel.y - pixel.speed,  // Move up
-          alpha: pixel.alpha - 0.01,  // Fade out
-          size: Math.max(0, pixel.size - 0.1),  // Shrink
-        };
-      }).filter(pixel => pixel.alpha > 0);  // Remove completely faded pixels
-      
-      setPixels(updatedPixels);
-      animationFrameId = requestAnimationFrame(render);
+      // Update pixel for next frame
+      return {
+        ...pixel,
+        y: pixel.y - pixel.speed,  // Move up
+        alpha: pixel.alpha - 0.01,  // Fade out
+        size: Math.max(0, pixel.size - 0.1),  // Shrink
+      };
+    }).filter(pixel => pixel.alpha > 0);  // Remove completely faded pixels
+    
+    pixelsRef.current = updatedPixels;
+  }, []);
+
+  useEffect(() => {
+    const animate = () => {
+      updatePixels();
+      requestRef.current = requestAnimationFrame(animate);
     };
     
-    render();
+    requestRef.current = requestAnimationFrame(animate);
     
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
     };
-  }, [pixels]);
+  }, [updatePixels]);
 
   return (
     <canvas 
