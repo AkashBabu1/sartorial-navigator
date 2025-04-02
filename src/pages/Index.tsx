@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -41,30 +42,30 @@ const Index = () => {
   const clothingItems = {
     shirts: [
       {
-        src: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1976&auto=format&fit=crop",
-        alt: "Blue dress shirt"
+        src: "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
+        alt: "Man in blue suit"
       },
       {
-        src: "https://images.unsplash.com/photo-1622445275576-721325763afe?q=80&w=1974&auto=format&fit=crop",
-        alt: "White t-shirt"
+        src: "/lovable-uploads/941a253a-56d7-43d5-ad08-16b2a6bff1bf.png",
+        alt: "Green t-shirts on hangers"
       },
       {
-        src: "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png",
-        alt: "Liverpool FC hoodie"
+        src: "/lovable-uploads/91c19fa7-bd0e-4534-a988-1a7e15cdbdaa.png",
+        alt: "Green cricket t-shirt"
       }
     ],
     pants: [
       {
-        src: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=1974&auto=format&fit=crop",
-        alt: "Blue jeans"
+        src: "/lovable-uploads/91c19fa7-bd0e-4534-a988-1a7e15cdbdaa.png",
+        alt: "Green cricket t-shirt" 
       },
       {
-        src: "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?q=80&w=1974&auto=format&fit=crop",
-        alt: "Black dress pants"
+        src: "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
+        alt: "Man in blue suit"
       },
       {
-        src: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?q=80&w=1944&auto=format&fit=crop",
-        alt: "Khaki chinos"
+        src: "/lovable-uploads/941a253a-56d7-43d5-ad08-16b2a6bff1bf.png",
+        alt: "Green t-shirts on hangers"
       }
     ]
   };
