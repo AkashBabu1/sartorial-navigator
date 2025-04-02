@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthModal from './AuthModal';
-import { Button } from './ui/button';
+import PixelTrail from './effects/PixelTrail';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -59,6 +59,9 @@ const Hero = () => {
 
   return (
     <div ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-32 px-4 md:px-0">
+      {/* Pixel Trail Animation */}
+      <PixelTrail />
+      
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-full">
         <div className="absolute top-20 left-[10%] w-64 h-64 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 parallax-element" data-speed="-0.2"></div>
