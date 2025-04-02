@@ -37,6 +37,38 @@ const Index = () => {
     return () => clearInterval(interval);
   }, []);
   
+  // Reference clothing items for the "How It Works" section
+  const clothingItems = {
+    shirts: [
+      {
+        src: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1976&auto=format&fit=crop",
+        alt: "Blue dress shirt"
+      },
+      {
+        src: "https://images.unsplash.com/photo-1622445275576-721325763afe?q=80&w=1974&auto=format&fit=crop",
+        alt: "White t-shirt"
+      },
+      {
+        src: "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png",
+        alt: "Liverpool FC hoodie"
+      }
+    ],
+    pants: [
+      {
+        src: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=1974&auto=format&fit=crop",
+        alt: "Blue jeans"
+      },
+      {
+        src: "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?q=80&w=1974&auto=format&fit=crop",
+        alt: "Black dress pants"
+      },
+      {
+        src: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?q=80&w=1944&auto=format&fit=crop",
+        alt: "Khaki chinos"
+      }
+    ]
+  };
+  
   const features = [
     {
       title: 'AI-Powered Matching',
@@ -228,10 +260,48 @@ const Index = () => {
               <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-white/20">
                 <div className="p-6 aspect-square bg-gradient-to-br from-gray-50 to-gray-100">
                   <div className="grid grid-cols-3 grid-rows-3 gap-3 h-full">
-                    <div className="col-span-2 row-span-2 bg-white rounded-xl shadow-sm animate-pulse"></div>
-                    <div className="bg-white rounded-xl shadow-sm animate-pulse" style={{animationDelay: '0.2s'}}></div>
-                    <div className="bg-white rounded-xl shadow-sm animate-pulse" style={{animationDelay: '0.3s'}}></div>
-                    <div className="col-span-2 bg-white rounded-xl shadow-sm animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                    {/* Shirts */}
+                    <div className="col-span-2 row-span-2 grid grid-cols-2 gap-3">
+                      {clothingItems.shirts.slice(0, 2).map((shirt, index) => (
+                        <div key={`shirt-${index}`} className="bg-white rounded-xl shadow-sm overflow-hidden">
+                          <img 
+                            src={shirt.src} 
+                            alt={shirt.alt}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                      <div className="col-span-2 bg-white rounded-xl shadow-sm p-2">
+                        <div className="flex justify-between items-center h-full">
+                          <span className="text-xs font-medium text-gray-500">Shirts & Tops</span>
+                          <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                            12 items
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Pants */}
+                    <div className="row-span-3 grid grid-rows-3 gap-3">
+                      {clothingItems.pants.map((pant, index) => (
+                        <div key={`pant-${index}`} className="bg-white rounded-xl shadow-sm overflow-hidden">
+                          <img 
+                            src={pant.src} 
+                            alt={pant.alt}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Additional shirt */}
+                    <div className="col-span-2 bg-white rounded-xl shadow-sm overflow-hidden">
+                      <img 
+                        src={clothingItems.shirts[2].src} 
+                        alt={clothingItems.shirts[2].alt}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
