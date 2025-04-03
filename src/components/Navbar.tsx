@@ -18,6 +18,12 @@ const Navbar = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const location = useLocation();
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  
+  // After mount, we have access to the theme
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -43,6 +49,31 @@ const Navbar = () => {
   const handleGetStarted = () => {
     setIsAuthModalOpen(true);
   };
+  
+  // Prevent hydration mismatch by only rendering theme switcher after mount
+  if (!mounted) {
+    return (
+      <nav
+        className={cn(
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4',
+          scrolled ? 'glass-card border-b border-gray-200 py-3' : 'bg-transparent'
+        )}
+      >
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link to="/" className="flex items-center">
+            <span className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500">
+              OutfitAI
+            </span>
+          </Link>
+          {/* Loading placeholder */}
+          <div className="flex items-center space-x-4">
+            <div className="w-10 h-10 rounded-md bg-gray-200 animate-pulse"></div>
+            <div className="w-24 h-9 rounded-md bg-gray-200 animate-pulse"></div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav
