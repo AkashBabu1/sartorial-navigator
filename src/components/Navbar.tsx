@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import AuthModal from './AuthModal';
-import { Home, Shirt, Heart, Camera, Moon, Sun, Palette } from 'lucide-react';
+import { Home, Shirt, Heart, Camera, Moon, Sun, Palette, Menu } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { 
   DropdownMenu,
