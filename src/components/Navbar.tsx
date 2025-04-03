@@ -49,6 +49,11 @@ const Navbar = () => {
   const handleGetStarted = () => {
     setIsAuthModalOpen(true);
   };
+
+  // Handle theme change
+  const handleThemeChange = (selectedTheme: string) => {
+    setTheme(selectedTheme);
+  };
   
   // Prevent hydration mismatch by only rendering theme switcher after mount
   if (!mounted) {
@@ -147,15 +152,15 @@ const Navbar = () => {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setTheme("light")}>
+              <DropdownMenuItem onClick={() => handleThemeChange("light")}>
                 <Sun className="h-4 w-4 mr-2" />
                 Light
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")}>
+              <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
                 <Moon className="h-4 w-4 mr-2" />
                 Dark
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")}>
+              <DropdownMenuItem onClick={() => handleThemeChange("system")}>
                 <Palette className="h-4 w-4 mr-2" />
                 System
               </DropdownMenuItem>
