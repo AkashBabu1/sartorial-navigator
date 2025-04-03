@@ -9,6 +9,7 @@ import TimelineSection from '@/components/home/TimelineSection';
 import HowItWorksSection from '@/components/home/HowItWorksSection';
 import CallToAction from '@/components/home/CallToAction';
 import Footer from '@/components/home/Footer';
+import InfiniteSlider from '@/components/home/InfiniteSlider';
 
 const Index = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -72,6 +73,9 @@ const Index = () => {
       <Navbar />
       
       <Hero />
+      
+      {/* Add the InfiniteSlider component between Hero and KeyFeatures */}
+      <InfiniteSlider />
       
       {/* Key Features Carousel */}
       <KeyFeatures carouselRef={carouselRef} />

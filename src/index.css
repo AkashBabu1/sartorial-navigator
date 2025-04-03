@@ -94,6 +94,9 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  
+  /* Import Playfair Display font */
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
 }
 
 @layer utilities {
@@ -105,6 +108,33 @@
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Custom animations for infinite slider */
+@keyframes slide-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 1rem));
+  }
+}
+
+@keyframes slide-right {
+  from {
+    transform: translateX(calc(-50% - 1rem));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slider-left {
+  animation: slide-left 35s linear infinite;
+}
+
+.animate-slider-right {
+  animation: slide-right 35s linear infinite;
 }
 
 /* Custom styles */
