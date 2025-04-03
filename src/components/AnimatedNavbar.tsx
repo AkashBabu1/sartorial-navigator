@@ -3,8 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Home, Shirt, Camera, Heart, Menu, X } from 'lucide-react';
+import { Home, Shirt, Camera, Heart, Menu, X, Moon, Sun, Palette } from 'lucide-react';
 import AuthModal from './AuthModal';
+import { useTheme } from 'next-themes';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface NavItem {
   path: string;
@@ -15,7 +22,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { path: '/', label: 'Home', icon: <Home className="h-5 w-5" /> },
   { path: '/wardrobe', label: 'Wardrobe', icon: <Shirt className="h-5 w-5" /> },
-  { path: '/outfits', label: 'Outfits', icon: <Shirt className="h-5 w-5" /> },
+  { path: '/outfits', label: 'Outfits Matching', icon: <Shirt className="h-5 w-5" /> },
   { path: '/recommendations', label: 'Recommendations', icon: <Heart className="h-5 w-5" /> },
   { path: '/virtual-try-on', label: 'Virtual Try-On', icon: <Camera className="h-5 w-5" /> },
 ];
@@ -26,6 +33,7 @@ const AnimatedNavbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     setActiveTab(location.pathname);
@@ -52,7 +60,7 @@ const AnimatedNavbar: React.FC = () => {
     <nav
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4',
-        scrolled ? 'glass-card border-b border-gray-200 py-3' : 'bg-transparent'
+        scrolled ? 'glass-card border-b border-gray-200 py-3 dark:glass-card-dark dark:border-gray-800' : 'bg-transparent'
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -64,7 +72,7 @@ const AnimatedNavbar: React.FC = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center justify-center flex-1">
-          <div className="flex items-center bg-black/5 backdrop-blur-sm rounded-full p-1.5">
+          <div className="flex items-center bg-black/5 dark:bg-white/5 backdrop-blur-sm rounded-full p-1.5">
             {navItems.map((item) => {
               const isActive = activeTab === item.path;
               return (
@@ -109,24 +117,55 @@ const AnimatedNavbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation Button */}
-        <button 
-          className="md:hidden rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground z-10"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-        >
-          {isMobileMenuOpen ? (
-            <X className="h-5 w-5" />
-          ) : (
-            <Menu className="h-5 w-5" />
-          )}
-        </button>
+        {/* Theme Toggle and Actions */}
+        <div className="flex items-center space-x-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-2 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground">
+                {theme === "dark" ? (
+                  <Moon className="h-5 w-5" />
+                ) : theme === "light" ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Palette className="h-5 w-5" />
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                <Sun className="h-4 w-4 mr-2" />
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                <Moon className="h-4 w-4 mr-2" />
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                <Palette className="h-4 w-4 mr-2" />
+                System
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          {/* Mobile Navigation Button */}
+          <button 
+            className="md:hidden rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground z-10"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </button>
+        </div>
 
         {/* Mobile Navigation Menu */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div 
-              className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-gray-200 shadow-lg md:hidden"
+              className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-gray-200 shadow-lg md:hidden dark:bg-background/90 dark:border-gray-800"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

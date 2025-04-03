@@ -4,12 +4,20 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import AuthModal from './AuthModal';
-import { Menu, Home, Shirt, Heart, Camera } from 'lucide-react';
+import { Home, Shirt, Heart, Camera, Moon, Sun, Palette } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -27,7 +35,7 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Home', path: '/', icon: <Home className="h-5 w-5" /> },
     { name: 'Wardrobe', path: '/wardrobe', icon: <Shirt className="h-5 w-5" /> },
-    { name: 'Outfits', path: '/outfits', icon: <Shirt className="h-5 w-5" /> },
+    { name: 'Outfits Matching', path: '/outfits', icon: <Shirt className="h-5 w-5" /> },
     { name: 'Recommendations', path: '/recommendations', icon: <Heart className="h-5 w-5" /> },
     { name: 'Virtual Try-On', path: '/virtual-try-on', icon: <Camera className="h-5 w-5" /> },
   ];
@@ -40,7 +48,7 @@ const Navbar = () => {
     <nav
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4',
-        scrolled ? 'glass-card border-b border-gray-200 py-3' : 'bg-transparent'
+        scrolled ? 'glass-card border-b border-gray-200 py-3 dark:glass-card-dark dark:border-gray-800' : 'bg-transparent'
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -51,7 +59,7 @@ const Navbar = () => {
         </Link>
 
         <div className="hidden md:flex items-center justify-center flex-1">
-          <div className="relative flex items-center bg-black/5 backdrop-blur-sm rounded-full p-1.5">
+          <div className="relative flex items-center bg-black/5 dark:bg-white/5 backdrop-blur-sm rounded-full p-1.5">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               return (
@@ -95,6 +103,34 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center space-x-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-2 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground">
+                {theme === "dark" ? (
+                  <Moon className="h-5 w-5" />
+                ) : theme === "light" ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Palette className="h-5 w-5" />
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                <Sun className="h-4 w-4 mr-2" />
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                <Moon className="h-4 w-4 mr-2" />
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                <Palette className="h-4 w-4 mr-2" />
+                System
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
           <motion.button 
             className="hidden md:inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             whileHover={{ scale: 1.05 }}
