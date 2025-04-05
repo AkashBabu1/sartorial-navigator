@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -146,6 +147,25 @@
   }
 }
 
+/* New vertical animation */
+@keyframes slide-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-66.666% - 1rem));
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(calc(-66.666% - 1rem));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 .animate-slider-left {
   animation: slide-left 35s linear infinite;
 }
@@ -160,6 +180,15 @@
 
 .animate-slider-right-fast {
   animation: slide-right-fast 20s linear infinite;
+}
+
+/* New vertical slider animations */
+.animate-slider-up {
+  animation: slide-up 25s linear infinite;
+}
+
+.animate-slider-down {
+  animation: slide-down 25s linear infinite;
 }
 
 /* Custom styles */

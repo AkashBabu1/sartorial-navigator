@@ -87,6 +87,14 @@ export default {
           from: { transform: "translateX(calc(-50% - 1rem))" },
           to: { transform: "translateX(0)" },
         },
+        "slide-up": {
+          from: { transform: "translateY(0)" },
+          to: { transform: "translateY(calc(-66.666% - 1rem))" },
+        },
+        "slide-down": {
+          from: { transform: "translateY(calc(-66.666% - 1rem))" },
+          to: { transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -95,6 +103,8 @@ export default {
         "slider-right": "slide-right 30s linear infinite",
         "slider-left-fast": "slide-left-fast 20s linear infinite",
         "slider-right-fast": "slide-right-fast 20s linear infinite",
+        "slider-up": "slide-up 25s linear infinite",
+        "slider-down": "slide-down 25s linear infinite",
       },
     },
   },
