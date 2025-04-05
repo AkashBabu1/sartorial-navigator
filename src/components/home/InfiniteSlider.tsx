@@ -84,7 +84,7 @@ const InfiniteSlider = () => {
       {/* Infinite slider container */}
       <div className="w-full flex flex-col gap-6 overflow-hidden">
         {/* First row - left to right */}
-        <div className="animate-slider-left flex whitespace-nowrap gap-6 py-2">
+        <div className="animate-slider-left-fast flex whitespace-nowrap gap-6 py-2">
           {items.map((item, idx) => (
             <div 
               key={`slider-1-${idx}`} 
@@ -104,7 +104,7 @@ const InfiniteSlider = () => {
         </div>
         
         {/* Second row - right to left with logos */}
-        <div className="animate-slider-right flex whitespace-nowrap gap-10 py-2 items-center">
+        <div className="animate-slider-right-fast flex whitespace-nowrap gap-10 py-2 items-center">
           {logos.map((item, idx) => (
             <div 
               key={`logo-${idx}`} 
