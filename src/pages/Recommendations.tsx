@@ -1,504 +1,230 @@
+
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import AnimatedNavbar from '@/components/AnimatedNavbar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { 
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
+import Navbar from '@/components/Navbar';
+import InspirationGrid from '@/components/InspirationGrid';
 import { useToast } from '@/components/ui/use-toast';
-import { useForm } from 'react-hook-form';
-import { ClothingItem } from '@/components/WardrobeGrid';
-import { matchOutfits } from '@/utils/colorUtils';
-import { Palette, Ruler, Wind, User, ChevronDown, Heart } from 'lucide-react';
-
-interface UserTraits {
-  colorPreference: string;
-  bodyShape: string;
-  style: string;
-  season: string;
-}
-
-interface Outfit {
-  id: string;
-  top?: ClothingItem;
-  bottom?: ClothingItem;
-  outerwear?: ClothingItem;
-  shoes?: ClothingItem;
-  accessories?: ClothingItem[];
-  occasion?: string;
-  matchScore: number;
-}
-
-const bodyShapes = [
-  "Rectangle", "Apple", "Pear", "Hourglass", "Triangle", "Inverted Triangle"
-];
-
-const styles = [
-  "Casual", "Formal", "Sporty", "Bohemian", "Vintage", "Minimalist", "Street"
-];
-
-const seasons = [
-  "Spring", "Summer", "Fall", "Winter", "All Seasons"
-];
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ImageItem } from '@/components/InspirationGrid';
 
 const Recommendations = () => {
-  const [wardrobe, setWardrobe] = useState<ClothingItem[]>([]);
-  const [recommendations, setRecommendations] = useState<Outfit[]>([]);
-  const [userTraits, setUserTraits] = useState<UserTraits | null>(null);
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-
-  const form = useForm<UserTraits>({
-    defaultValues: {
-      colorPreference: '',
-      bodyShape: '',
-      style: '',
-      season: ''
+  
+  // Sample inspiration images
+  const casualInspiration: ImageItem[] = [
+    {
+      id: 'casual-1',
+      src: 'public/lovable-uploads/7111c273-c407-49e1-954b-90979678ecb7.png',
+      alt: 'Fashion inspiration collage',
+      className: 'col-span-2 row-span-2'
+    },
+    {
+      id: 'casual-2',
+      src: '/lovable-uploads/91c19fa7-bd0e-4534-a988-1a7e15cdbdaa.png',
+      alt: 'Casual outfit inspiration'
+    },
+    {
+      id: 'casual-3',
+      src: '/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png',
+      alt: 'Casual style inspiration'
+    },
+    {
+      id: 'casual-4',
+      src: '/lovable-uploads/641c19fa7-bd0e-4534-a988-2b7e15cdbdaa.png',
+      alt: 'Modern casual style',
+      // Using a placeholder image if the above doesn't exist
+      src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+    },
+    {
+      id: 'casual-5',
+      src: '/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png',
+      alt: 'Casual outfit example'
     }
-  });
-
-  useEffect(() => {
-    // Load wardrobe from local storage
-    const savedItems = localStorage.getItem('wardrobe');
-    
-    if (savedItems) {
-      try {
-        setWardrobe(JSON.parse(savedItems));
-      } catch (error) {
-        console.error('Failed to parse wardrobe data', error);
-      }
+  ];
+  
+  const formalInspiration: ImageItem[] = [
+    {
+      id: 'formal-1',
+      src: '/lovable-uploads/a903b6b2-c3c3-42b6-af8d-99b03a149613.png',
+      alt: 'Formal outfit inspiration',
+      className: 'col-span-2 row-span-2'
+    },
+    {
+      id: 'formal-2',
+      src: '/lovable-uploads/bbcf8161-a234-4b01-b532-ab3317291382.png',
+      alt: 'Formal style example'
+    },
+    {
+      id: 'formal-3',
+      src: 'https://images.unsplash.com/photo-1470813740244-df37b8c1edcb',
+      alt: 'Evening formal wear'
+    },
+    {
+      id: 'formal-4',
+      src: 'https://images.unsplash.com/photo-1500673922987-e212871fec22',
+      alt: 'Formal occasion outfit'
+    },
+    {
+      id: 'formal-5',
+      src: '/lovable-uploads/2f676777-5408-49bb-b187-b0e5bcabdc7d.png',
+      alt: 'Business formal style'
     }
-    
-    // Load previous user traits if available
-    const savedTraits = localStorage.getItem('userTraits');
-    if (savedTraits) {
-      try {
-        const traits = JSON.parse(savedTraits);
-        setUserTraits(traits);
-        form.reset(traits);
-      } catch (error) {
-        console.error('Failed to parse user traits', error);
-      }
+  ];
+  
+  const artInspiration: ImageItem[] = [
+    {
+      id: 'art-1',
+      src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+      alt: 'Artistic inspiration',
+      className: 'col-span-2 row-span-2'
+    },
+    {
+      id: 'art-2',
+      src: '/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png',
+      alt: 'Creative style'
+    },
+    {
+      id: 'art-3',
+      src: 'https://images.unsplash.com/photo-1466442929976-97f336a657be',
+      alt: 'Artistic fashion'
+    },
+    {
+      id: 'art-4',
+      src: '/lovable-uploads/941a253a-56d7-43d5-ad08-16b2a6bff1bf.png',
+      alt: 'Creative outfit ideas'
+    },
+    {
+      id: 'art-5',
+      src: '/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png',
+      alt: 'Avant-garde fashion'
     }
-  }, [form]);
-
-  const onSubmit = (data: UserTraits) => {
-    setLoading(true);
-    setUserTraits(data);
-    
-    // Save user traits to local storage
-    localStorage.setItem('userTraits', JSON.stringify(data));
-    
-    // Generate recommendations after a delay to simulate processing
-    setTimeout(() => {
-      if (wardrobe.length > 0) {
-        // Generate outfits using the existing matchOutfits function
-        const generatedOutfits = matchOutfits(wardrobe);
-        
-        // In a real application, you would filter and score these outfits based on user traits
-        // Here we'll just add a random match score for demonstration
-        const scoredOutfits = generatedOutfits.map(outfit => ({
-          ...outfit,
-          matchScore: Math.floor(Math.random() * 100)
-        }));
-        
-        // Sort by match score
-        scoredOutfits.sort((a, b) => b.matchScore - a.matchScore);
-        
-        setRecommendations(scoredOutfits);
-        
-        toast({
-          title: "Recommendations Ready",
-          description: `Found ${scoredOutfits.length} outfits that match your style preferences.`,
-        });
-      } else {
-        toast({
-          title: "No Wardrobe Items",
-          description: "Please add some items to your wardrobe first.",
-          variant: "destructive",
-        });
-      }
-      setLoading(false);
-    }, 1500);
-  };
-
-  // Animation variants
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
-
-  const arrowVariants = {
-    initial: { y: 0 },
-    animate: { y: [0, 5, 0], transition: { repeat: Infinity, duration: 1.5 } }
-  };
+  ];
 
   return (
     <div className="min-h-screen pb-20">
-      <AnimatedNavbar />
+      <Navbar />
       
-      <div className="max-w-7xl mx-auto px-6 pt-24">
-        <div className="text-center mb-12 animate-fade-up">
+      <div className="max-w-7xl mx-auto px-6 pt-24 animate-fade-up">
+        <div className="text-center mb-12">
           <div className="inline-block bg-muted px-3 py-1 rounded-full text-xs font-medium mb-4">
-            Personal Style
+            Style Inspiration
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
-            Your Personalized Style Recommendations
+            Discover Your Style
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Tell us about your preferences, and we'll recommend outfits just for you.
+            Browse curated collections and get personalized style recommendations based on your wardrobe.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-12">
-          <motion.div 
-            className="lg:col-span-2 glass-card p-6 rounded-lg"
-            variants={container}
-            initial="hidden"
-            animate="show"
-          >
-            <h2 className="text-xl font-semibold mb-6">Your Style Profile</h2>
-            
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <motion.div variants={item}>
-                  <FormItem className="space-y-3">
-                    <FormLabel className="flex items-center gap-2">
-                      <Palette className="h-4 w-4" />
-                      Color Preference
-                    </FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="text" 
-                        placeholder="E.g., Blue, Earth tones, Pastels..."
-                        {...form.register("colorPreference")} 
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      What colors do you usually prefer to wear?
-                    </FormDescription>
-                  </FormItem>
-                </motion.div>
-                
-                <motion.div variants={item}>
-                  <FormItem className="space-y-3">
-                    <FormLabel className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
-                      Body Shape
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <select 
-                          className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-base appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm"
-                          {...form.register("bodyShape")}
-                        >
-                          <option value="">Select your body shape</option>
-                          {bodyShapes.map(shape => (
-                            <option key={shape} value={shape.toLowerCase()}>
-                              {shape}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown className="absolute right-3 top-3 h-4 w-4 pointer-events-none text-muted-foreground" />
-                      </div>
-                    </FormControl>
-                    <FormDescription>
-                      This helps us suggest flattering silhouettes.
-                    </FormDescription>
-                  </FormItem>
-                </motion.div>
-                
-                <motion.div variants={item}>
-                  <FormItem className="space-y-3">
-                    <FormLabel className="flex items-center gap-2">
-                      <Wind className="h-4 w-4" />
-                      Style Preference
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <select 
-                          className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-base appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm"
-                          {...form.register("style")}
-                        >
-                          <option value="">Select your style</option>
-                          {styles.map(style => (
-                            <option key={style} value={style.toLowerCase()}>
-                              {style}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown className="absolute right-3 top-3 h-4 w-4 pointer-events-none text-muted-foreground" />
-                      </div>
-                    </FormControl>
-                    <FormDescription>
-                      What style of clothing do you prefer?
-                    </FormDescription>
-                  </FormItem>
-                </motion.div>
-                
-                <motion.div variants={item}>
-                  <FormItem className="space-y-3">
-                    <FormLabel className="flex items-center gap-2">
-                      <Ruler className="h-4 w-4" />
-                      Season
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <select 
-                          className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-base appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm"
-                          {...form.register("season")}
-                        >
-                          <option value="">Select season</option>
-                          {seasons.map(season => (
-                            <option key={season} value={season.toLowerCase()}>
-                              {season}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown className="absolute right-3 top-3 h-4 w-4 pointer-events-none text-muted-foreground" />
-                      </div>
-                    </FormControl>
-                    <FormDescription>
-                      What season are you planning outfits for?
-                    </FormDescription>
-                  </FormItem>
-                </motion.div>
-                
-                <motion.div variants={item}>
-                  <Button 
-                    type="submit" 
-                    className="w-full"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-                        Generating Recommendations...
-                      </>
-                    ) : (
-                      "Generate Recommendations"
-                    )}
-                  </Button>
-                </motion.div>
-              </form>
-            </Form>
-          </motion.div>
+        <Tabs defaultValue="casual" className="w-full">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-8">
+            <TabsTrigger value="casual">Casual</TabsTrigger>
+            <TabsTrigger value="formal">Formal</TabsTrigger>
+            <TabsTrigger value="artistic">Artistic</TabsTrigger>
+          </TabsList>
           
-          <div className="lg:col-span-3">
+          <TabsContent value="casual" className="space-y-8">
             <div className="glass-card p-6 rounded-lg">
-              <h2 className="text-xl font-semibold mb-6">Recommended Outfits</h2>
+              <InspirationGrid 
+                images={casualInspiration} 
+                title="Casual Style Inspiration"
+                className="mb-8"
+              />
               
-              {!userTraits && recommendations.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-                    <Heart className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-lg font-medium mb-1">No Recommendations Yet</h3>
-                  <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                    Fill out your style profile to get personalized outfit recommendations.
-                  </p>
-                  <motion.div 
-                    className="mt-4"
-                    variants={arrowVariants}
-                    initial="initial"
-                    animate="animate"
-                  >
-                    <svg className="h-5 w-5 mx-auto text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 19V5M5 12l7-7 7 7"/>
-                    </svg>
-                  </motion.div>
-                </div>
-              )}
-              
-              {loading && (
-                <div className="py-12 text-center">
-                  <div className="h-12 w-12 mx-auto mb-4 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-                  <p className="text-muted-foreground">Analyzing your style preferences...</p>
-                </div>
-              )}
-              
-              {recommendations.length > 0 && (
-                <motion.div 
-                  variants={container}
-                  initial="hidden"
-                  animate="show"
-                  className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                >
-                  {recommendations.map((outfit) => (
-                    <motion.div 
-                      key={outfit.id} 
-                      variants={item}
-                      whileHover={{ y: -5 }}
-                      className="glass-card rounded-lg overflow-hidden hover-lift"
-                    >
-                      <div className="aspect-[4/3] bg-gray-50 relative">
-                        <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-1 p-1">
-                          {outfit.top && (
-                            <div className="row-span-1 col-span-1 overflow-hidden rounded-md">
-                              <img 
-                                src={outfit.top.image} 
-                                alt="Top" 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          )}
-                          {outfit.bottom && (
-                            <div className="row-span-1 col-span-1 overflow-hidden rounded-md">
-                              <img 
-                                src={outfit.bottom.image} 
-                                alt="Bottom" 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          )}
-                          {outfit.outerwear && (
-                            <div className="row-span-1 col-span-1 overflow-hidden rounded-md">
-                              <img 
-                                src={outfit.outerwear.image} 
-                                alt="Outerwear" 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          )}
-                          {outfit.shoes && (
-                            <div className="row-span-1 col-span-1 overflow-hidden rounded-md">
-                              <img 
-                                src={outfit.shoes.image} 
-                                alt="Shoes" 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <div className="p-4">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-medium">Outfit #{outfit.id.substring(0, 4)}</h3>
-                          <div className="flex items-center">
-                            <span className="text-sm font-medium mr-2">Match</span>
-                            <div className="inline-flex items-center justify-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-                              {outfit.matchScore}%
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          {outfit.occasion && (
-                            <div className={`text-xs px-2 py-1 rounded-full ${
-                              outfit.occasion === 'casual' 
-                                ? 'bg-orange-100 text-orange-800' 
-                                : 'bg-indigo-100 text-indigo-800'
-                            }`}>
-                              {outfit.occasion.charAt(0).toUpperCase() + outfit.occasion.slice(1)}
-                            </div>
-                          )}
-                          {userTraits?.style && (
-                            <div className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
-                              {userTraits.style.charAt(0).toUpperCase() + userTraits.style.slice(1)}
-                            </div>
-                          )}
-                          {userTraits?.season && (
-                            <div className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
-                              {userTraits.season.charAt(0).toUpperCase() + userTraits.season.slice(1)}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
-            </div>
-            
-            {/* How It Works Section */}
-            <motion.div 
-              className="mt-8 glass-card p-6 rounded-lg"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-xl font-semibold mb-6 text-center">How It Works</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="h-12 w-12 mx-auto mb-4 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <span className="font-bold">1</span>
-                  </div>
-                  <h3 className="font-medium mb-2">Share Your Preferences</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Tell us about your style, body shape, and color preferences
-                  </p>
-                  <motion.div 
-                    className="mt-3 flex justify-center"
-                    variants={arrowVariants}
-                    initial="initial"
-                    animate="animate"
-                  >
-                    <svg className="h-5 w-5 text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                  </motion.div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="h-12 w-12 mx-auto mb-4 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <span className="font-bold">2</span>
-                  </div>
-                  <h3 className="font-medium mb-2">AI Analyzes Your Style</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Our AI matches you with outfits based on your unique profile
-                  </p>
-                  <motion.div 
-                    className="mt-3 flex justify-center"
-                    variants={arrowVariants}
-                    initial="initial"
-                    animate="animate"
-                  >
-                    <svg className="h-5 w-5 text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                  </motion.div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="h-12 w-12 mx-auto mb-4 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <span className="font-bold">3</span>
-                  </div>
-                  <h3 className="font-medium mb-2">Try Them Virtually</h3>
-                  <p className="text-sm text-muted-foreground">
-                    See how outfits look before deciding what to wear
-                  </p>
-                  <motion.div className="mt-3">
-                    <Button asChild size="sm" className="mx-auto">
-                      <Link to="/virtual-try-on">Try Now</Link>
-                    </Button>
-                  </motion.div>
-                </div>
+              <div className="mt-6 space-y-4">
+                <h3 className="text-lg font-medium">Casual Style Tips</h3>
+                <ul className="space-y-2">
+                  <li className="flex items-start">
+                    <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span className="ml-3 text-sm">Mix and match neutral colors for a timeless look</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span className="ml-3 text-sm">Invest in quality basics that can be dressed up or down</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span className="ml-3 text-sm">Add a statement accessory to elevate simple outfits</span>
+                  </li>
+                </ul>
               </div>
-            </motion.div>
-          </div>
-        </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="formal" className="space-y-8">
+            <div className="glass-card p-6 rounded-lg">
+              <InspirationGrid 
+                images={formalInspiration} 
+                title="Formal Style Inspiration"
+                className="mb-8"
+              />
+              
+              <div className="mt-6 space-y-4">
+                <h3 className="text-lg font-medium">Formal Style Tips</h3>
+                <ul className="space-y-2">
+                  <li className="flex items-start">
+                    <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span className="ml-3 text-sm">Ensure proper fit - tailoring makes all the difference</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span className="ml-3 text-sm">Pay attention to details like pocket squares and cufflinks</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span className="ml-3 text-sm">Keep colors classic and coordinated for professional settings</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="artistic" className="space-y-8">
+            <div className="glass-card p-6 rounded-lg">
+              <InspirationGrid 
+                images={artInspiration} 
+                title="Artistic Style Inspiration"
+                className="mb-8"
+              />
+              
+              <div className="mt-6 space-y-4">
+                <h3 className="text-lg font-medium">Artistic Style Tips</h3>
+                <ul className="space-y-2">
+                  <li className="flex items-start">
+                    <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span className="ml-3 text-sm">Experiment with bold colors and unexpected combinations</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span className="ml-3 text-sm">Mix textures and patterns to create visual interest</span>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="h-5 w-5 mt-0.5 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span className="ml-3 text-sm">Don't be afraid to incorporate vintage and unique pieces</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

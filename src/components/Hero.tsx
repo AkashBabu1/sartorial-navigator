@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthModal from './AuthModal';
 import PixelTrail from './effects/PixelTrail';
+import InspirationGrid from './InspirationGrid';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -57,6 +58,31 @@ const Hero = () => {
     ],
   };
 
+  // Style inspiration images for the grid
+  const inspirationImages = [
+    {
+      id: 'insp-1',
+      src: 'public/lovable-uploads/7111c273-c407-49e1-954b-90979678ecb7.png',
+      alt: 'Style collage inspiration',
+      className: 'col-span-2 row-span-2'
+    },
+    {
+      id: 'insp-2',
+      src: '/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png',
+      alt: 'Fashion inspiration'
+    },
+    {
+      id: 'insp-3',
+      src: '/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png',
+      alt: 'Style inspiration'
+    },
+    {
+      id: 'insp-4',
+      src: '/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png',
+      alt: 'Fashion trend'
+    }
+  ];
+
   return (
     <div ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-32 px-4 md:px-0">
       {/* Pixel Trail Animation */}
@@ -102,6 +128,20 @@ const Hero = () => {
                 <span className="absolute inset-0 rounded-md animate-border-flow-reverse bg-gradient-to-r from-blue-400 via-primary to-blue-600 bg-[length:400%_100%]"></span>
               </span>
               <span className="absolute inset-[2px] bg-background rounded-md transition-colors group-hover:bg-accent"></span>
+            </Link>
+          </div>
+          
+          {/* New style inspiration grid */}
+          <div className="hidden md:block mt-8 md:mt-12">
+            <Link to="/recommendations" className="group">
+              <div className="text-sm font-medium mb-2 flex items-center">
+                <span>Style Inspiration</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1 transition-transform group-hover:translate-x-1"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </div>
+              <InspirationGrid 
+                images={inspirationImages.slice(0, 4)} 
+                className="max-w-md hover:opacity-90 transition-opacity"
+              />
             </Link>
           </div>
         </div>
