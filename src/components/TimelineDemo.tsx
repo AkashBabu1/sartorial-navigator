@@ -26,29 +26,51 @@ const VerticalInfiniteImageScroll = ({ images }: { images: string[] }) => {
 };
 
 export function TimelineDemo() {
+  // Organizing images by categories for better grouping
+  const images = {
+    tops: [
+      "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png",
+      "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png",
+      "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png",
+      "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png"
+    ],
+    bottoms: [
+      "/lovable-uploads/2f676777-5408-49bb-b187-b0e5bcabdc7d.png",
+      "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png",
+      "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png"
+    ],
+    outfits: [
+      "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
+      "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png",
+      "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png"
+    ],
+    accessories: [
+      "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png",
+      "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png",
+      "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png"
+    ]
+  };
+
   const data = [{
     title: "AI-Powered Matching",
     content: <div>
           <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             Our intelligent algorithm combines color theory and style rules to create perfect outfit combinations.
           </p>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
               <VerticalInfiniteImageScroll 
-                images={[
-                  "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png",
-                  "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png",
-                  "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png"
-                ]} 
+                images={images.tops} 
               />
             </div>
             <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
               <VerticalInfiniteImageScroll 
-                images={[
-                  "/lovable-uploads/2f676777-5408-49bb-b187-b0e5bcabdc7d.png",
-                  "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png",
-                  "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png"
-                ]} 
+                images={images.bottoms}
+              />
+            </div>
+            <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
+              <VerticalInfiniteImageScroll 
+                images={images.outfits}
               />
             </div>
           </div>
@@ -59,23 +81,20 @@ export function TimelineDemo() {
           <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             Easily categorize and organize your clothing items for quick retrieval and matching.
           </p>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
               <VerticalInfiniteImageScroll 
-                images={[
-                  "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png",
-                  "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png",
-                  "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png"
-                ]} 
+                images={[...images.tops].reverse()}
               />
             </div>
             <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
               <VerticalInfiniteImageScroll 
-                images={[
-                  "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png",
-                  "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
-                  "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png"
-                ]} 
+                images={images.bottoms}
+              />
+            </div>
+            <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
+              <VerticalInfiniteImageScroll 
+                images={images.accessories}
               />
             </div>
           </div>
@@ -86,32 +105,25 @@ export function TimelineDemo() {
           <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
             See how outfits would look on you using our advanced AI technology before buying or wearing them.
           </p>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
               <VerticalInfiniteImageScroll 
-                images={[
-                  "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png",
-                  "/lovable-uploads/2f676777-5408-49bb-b187-b0e5bcabdc7d.png",
-                  "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png"
-                ]} 
+                images={images.tops} 
               />
             </div>
             <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
               <VerticalInfiniteImageScroll 
-                images={[
-                  "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png",
-                  "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png",
-                  "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png"
-                ]} 
+                images={images.bottoms}
               />
             </div>
             <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
               <VerticalInfiniteImageScroll 
-                images={[
-                  "/lovable-uploads/2f676777-5408-49bb-b187-b0e5bcabdc7d.png",
-                  "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
-                  "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png"
-                ]} 
+                images={images.outfits}
+              />
+            </div>
+            <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
+              <VerticalInfiniteImageScroll 
+                images={images.accessories}
               />
             </div>
           </div>
@@ -147,23 +159,25 @@ export function TimelineDemo() {
               ✅ Fashion trend integration
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
               <VerticalInfiniteImageScroll 
-                images={[
-                  "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png",
-                  "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png",
-                  "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png"
-                ]} 
+                images={[...images.outfits].reverse()} 
               />
             </div>
             <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
               <VerticalInfiniteImageScroll 
-                images={[
-                  "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
-                  "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png",
-                  "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png"
-                ]} 
+                images={images.tops}
+              />
+            </div>
+            <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
+              <VerticalInfiniteImageScroll 
+                images={images.bottoms}
+              />
+            </div>
+            <div className="h-20 md:h-44 lg:h-60 w-full overflow-hidden rounded-lg">
+              <VerticalInfiniteImageScroll 
+                images={images.accessories}
               />
             </div>
           </div>
