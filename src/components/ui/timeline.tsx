@@ -49,7 +49,19 @@ export const Timeline = ({
   return <div className="w-full bg-white dark:bg-neutral-950 font-sans md:px-10 relative" ref={containerRef}>
       <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
         {data.map((item, index) => (
-          <div key={index} className="flex justify-start pt-10 md:pt-40 md:gap-10">
+          <motion.div 
+            key={index} 
+            className="flex justify-start pt-10 md:pt-40 md:gap-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ 
+              opacity: activeIndex >= index ? 1 : 0.5,
+              y: activeIndex >= index ? 0 : 10 
+            }}
+            transition={{ 
+              duration: 0.5, 
+              delay: activeIndex >= index ? 0.1 : 0 
+            }}
+          >
             <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
               <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-white dark:bg-black flex items-center justify-center">
                 <motion.div 
@@ -76,7 +88,7 @@ export const Timeline = ({
               </h3>
               {item.content}{" "}
             </div>
-          </div>
+          </motion.div>
         ))}
         <div style={{
         height: height + "px"
