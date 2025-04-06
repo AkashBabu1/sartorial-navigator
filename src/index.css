@@ -191,6 +191,20 @@
   animation: slide-down 25s linear infinite;
 }
 
+/* New floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
 /* Custom styles */
 .glass-card {
   background: rgba(255, 255, 255, 0.8);
