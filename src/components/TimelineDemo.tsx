@@ -58,50 +58,54 @@ const ImageGrid = ({ imageGroups, columns = 3 }: { imageGroups: string[][], colu
 };
 
 export function TimelineDemo() {
-  // Updated clothing categories with more diverse items
+  // Images organized by features rather than just clothing types
   const images = {
-    // T-shirts category
+    // AI Matching feature images
+    aiMatching: [
+      "/lovable-uploads/e9824bce-dcfb-4d69-b831-abf57c2fca21.png", // AI analysis visualization
+      "/lovable-uploads/91c19fa7-bd0e-4534-a988-1a7e15cdbdaa.png", // Color matching example
+      "/lovable-uploads/a903b6b2-c3c3-42b6-af8d-99b03a149613.png", // Style recommendation
+    ],
+    
+    // Organization feature images
+    organization: [
+      "/lovable-uploads/bbcf8161-a234-4b01-b532-ab3317291382.png", // Categorized wardrobe view
+      "/lovable-uploads/941a253a-56d7-43d5-ad08-16b2a6bff1bf.png", // Organized closet
+      "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86", // Clean organization
+    ],
+    
+    // Style inspiration feature images
+    inspiration: [
+      "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png", // Complete outfit suggestion
+      "/lovable-uploads/e9824bce-dcfb-4d69-b831-abf57c2fca21.png", // Style trends
+      "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png", // Seasonal collection
+    ],
+    
+    // Virtual try-on feature images
+    virtualTryOn: [
+      "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png", // Hoodie try-on example
+      "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png", // T-shirt try-on example
+      "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png", // Pants try-on example
+    ],
+    
+    // Recommendation feature images 
+    recommendations: [
+      "/lovable-uploads/e9824bce-dcfb-4d69-b831-abf57c2fca21.png", // Style analysis chart
+      "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png", // Recommended hoodie
+      "/lovable-uploads/2f676777-5408-49bb-b187-b0e5bcabdc7d.png", // Recommended shirt
+      "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png", // Recommended pants
+    ],
+    
+    // Clothing category sample images
     tshirts: [
       "/lovable-uploads/2f676777-5408-49bb-b187-b0e5bcabdc7d.png", // Cricket t-shirt
       "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png", // Hitman t-shirt
-      "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png",  // Another t-shirt
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" // Additional t-shirt
+      "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png", // Another t-shirt
     ],
     
-    // Hoodies category
     hoodies: [
       "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png", // Messi hoodie
       "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png", // Another hoodie
-      "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png"  // Third hoodie
-    ],
-    
-    // Pants/bottoms category
-    pants: [
-      "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png", // Blue jeans
-      "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9", // Additional pants
-      "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png"  // Another bottom
-    ],
-    
-    // Complete outfits category
-    outfits: [
-      "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
-      "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png",
-      "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
-      "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png"
-    ],
-    
-    // Accessories category
-    accessories: [
-      "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png",
-      "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png",
-      "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png"
-    ],
-    
-    // Style inspiration category
-    inspiration: [
-      "/lovable-uploads/e9824bce-dcfb-4d69-b831-abf57c2fca21.png",
-      "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
-      "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png"
     ]
   };
 
@@ -113,9 +117,9 @@ export function TimelineDemo() {
           </p>
           <ImageGrid 
             imageGroups={[
+              images.aiMatching,
               images.tshirts,
-              images.pants,
-              images.outfits
+              images.hoodies
             ]} 
           />
         </div>
@@ -127,9 +131,9 @@ export function TimelineDemo() {
           </p>
           <ImageGrid 
             imageGroups={[
-              images.hoodies,
-              images.pants,
-              images.accessories
+              images.organization,
+              images.tshirts,
+              images.hoodies
             ]}
           />
         </div>
@@ -159,10 +163,10 @@ export function TimelineDemo() {
           </p>
           <ImageGrid 
             imageGroups={[
+              images.virtualTryOn,
               images.tshirts,
-              images.hoodies, 
-              images.pants,
-              images.accessories
+              images.hoodies,
+              images.aiMatching
             ]}
             columns={4}
           />
@@ -200,10 +204,10 @@ export function TimelineDemo() {
           </div>
           <ImageGrid 
             imageGroups={[
-              images.outfits,
+              images.recommendations,
               images.tshirts,
               images.hoodies,
-              images.pants
+              images.aiMatching
             ]}
             columns={4}
           />
