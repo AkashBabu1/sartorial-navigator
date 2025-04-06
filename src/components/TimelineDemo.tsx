@@ -58,30 +58,46 @@ const ImageGrid = ({ imageGroups, columns = 3 }: { imageGroups: string[][], colu
 };
 
 export function TimelineDemo() {
-  // Organizing images by categories for better grouping
+  // Updated clothing categories with more diverse items
   const images = {
-    tops: [
-      "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png",
-      "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png",
-      "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png",
-      "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png"
+    // T-shirts category
+    tshirts: [
+      "/lovable-uploads/2f676777-5408-49bb-b187-b0e5bcabdc7d.png", // Cricket t-shirt
+      "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png", // Hitman t-shirt
+      "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png",  // Another t-shirt
+      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" // Additional t-shirt
     ],
-    bottoms: [
-      "/lovable-uploads/2f676777-5408-49bb-b187-b0e5bcabdc7d.png",
-      "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png",
-      "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png"
+    
+    // Hoodies category
+    hoodies: [
+      "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png", // Messi hoodie
+      "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png", // Another hoodie
+      "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png"  // Third hoodie
     ],
+    
+    // Pants/bottoms category
+    pants: [
+      "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png", // Blue jeans
+      "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9", // Additional pants
+      "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png"  // Another bottom
+    ],
+    
+    // Complete outfits category
     outfits: [
       "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
       "/lovable-uploads/47f7ede4-2756-4dd3-916d-f35bb0f13c27.png",
+      "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
       "/lovable-uploads/728218e4-767e-4878-bac1-0d96feb68a31.png"
     ],
+    
+    // Accessories category
     accessories: [
-      "/lovable-uploads/645d3be4-8b13-45cb-86c0-ff363cc2d4c3.png",
       "/lovable-uploads/0c34cc36-6117-40c6-b645-ab0b1fb11d70.png",
-      "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png"
+      "/lovable-uploads/e22d9e5d-94d5-4904-b0b5-f2f41a4fee28.png",
+      "/lovable-uploads/561a2e7c-5563-4412-b4ae-f35719b3ed12.png"
     ],
-    // Add the new inspiration image
+    
+    // Style inspiration category
     inspiration: [
       "/lovable-uploads/e9824bce-dcfb-4d69-b831-abf57c2fca21.png",
       "/lovable-uploads/e30bc1cf-9d72-472a-b45e-6219214de5ca.png",
@@ -97,8 +113,8 @@ export function TimelineDemo() {
           </p>
           <ImageGrid 
             imageGroups={[
-              images.tops,
-              images.bottoms,
+              images.tshirts,
+              images.pants,
               images.outfits
             ]} 
           />
@@ -111,8 +127,8 @@ export function TimelineDemo() {
           </p>
           <ImageGrid 
             imageGroups={[
-              [...images.tops].reverse(),
-              images.bottoms,
+              images.hoodies,
+              images.pants,
               images.accessories
             ]}
           />
@@ -128,10 +144,10 @@ export function TimelineDemo() {
               <VerticalSequentialScroll images={images.inspiration} />
             </div>
             <div className="h-20 md:h-30 lg:h-38 overflow-hidden rounded-lg">
-              <VerticalSequentialScroll images={images.tops} />
+              <VerticalSequentialScroll images={images.tshirts} />
             </div>
             <div className="h-20 md:h-30 lg:h-38 overflow-hidden rounded-lg">
-              <VerticalSequentialScroll images={images.bottoms} />
+              <VerticalSequentialScroll images={images.hoodies} />
             </div>
           </div>
         </div>
@@ -143,9 +159,9 @@ export function TimelineDemo() {
           </p>
           <ImageGrid 
             imageGroups={[
-              images.tops,
-              images.bottoms, 
-              images.outfits,
+              images.tshirts,
+              images.hoodies, 
+              images.pants,
               images.accessories
             ]}
             columns={4}
@@ -184,10 +200,10 @@ export function TimelineDemo() {
           </div>
           <ImageGrid 
             imageGroups={[
-              [...images.outfits].reverse(),
-              images.tops,
-              images.bottoms,
-              images.accessories
+              images.outfits,
+              images.tshirts,
+              images.hoodies,
+              images.pants
             ]}
             columns={4}
           />
