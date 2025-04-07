@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -101,6 +100,11 @@ export default {
           "70%": { opacity: "1" },
           "100%": { transform: "rotate(215deg) translateX(-500px)", opacity: "0" },
         },
+        "gradient-xy": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -112,6 +116,7 @@ export default {
         "slider-up": "slide-up 25s linear infinite",
         "slider-down": "slide-down 25s linear infinite",
         "meteor-effect": "meteor linear forwards",
+        "gradient-xy": "gradient-xy 5s ease infinite",
       },
     },
   },

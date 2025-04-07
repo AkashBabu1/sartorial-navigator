@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -106,6 +107,24 @@
   
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Rainbow gradient animation */
+  @keyframes gradient-xy {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animate-gradient-xy {
+    animation: gradient-xy 5s ease infinite;
+    background-size: 300% 300%;
   }
 }
 
