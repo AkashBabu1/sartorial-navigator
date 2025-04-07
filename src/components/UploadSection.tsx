@@ -1,15 +1,58 @@
 
 import React, { useState, useCallback } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Upload, X, Tag as TagIcon } from 'lucide-react';
 
 interface UploadSectionProps {
-  onImageUploaded: (image: string, category: string) => void;
+  onImageUploaded: (image: string, category: string, name: string, description: string, color: string, tags: string[]) => void;
+  suggestedTags?: string[];
 }
 
-const UploadSection: React.FC<UploadSectionProps> = ({ onImageUploaded }) => {
+const COLORS = [
+  { value: 'black', label: 'Black' },
+  { value: 'white', label: 'White' },
+  { value: 'gray', label: 'Gray' },
+  { value: 'red', label: 'Red' },
+  { value: 'blue', label: 'Blue' },
+  { value: 'green', label: 'Green' },
+  { value: 'yellow', label: 'Yellow' },
+  { value: 'purple', label: 'Purple' },
+  { value: 'pink', label: 'Pink' },
+  { value: 'brown', label: 'Brown' },
+  { value: 'orange', label: 'Orange' },
+  { value: 'navy', label: 'Navy' },
+];
+
+const DEFAULT_TAGS = {
+  tops: ['casual', 'formal', 'work', 'everyday', 'party'],
+  bottoms: ['casual', 'formal', 'jeans', 'shorts', 'slim-fit'],
+  outerwear: ['winter', 'lightweight', 'waterproof', 'cozy', 'warm'],
+  dresses: ['formal', 'casual', 'party', 'summer', 'wedding'],
+  shoes: ['casual', 'formal', 'sports', 'winter', 'summer'],
+  accessories: ['formal', 'casual', 'statement', 'everyday', 'functional']
+};
+
+const UploadSection: React.FC<UploadSectionProps> = ({ onImageUploaded, suggestedTags = [] }) => {
   const [dragActive, setDragActive] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [category, setCategory] = useState('tops');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [color, setColor] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
 
@@ -73,16 +116,66 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onImageUploaded }) => {
     reader.readAsDataURL(file);
   };
 
-  const saveItem = () => {
-    if (image) {
-      onImageUploaded(image, category);
-      setImage(null);
-      toast({
-        title: "Item added!",
-        description: `Your ${category} item has been added to your wardrobe.`,
-      });
+  const handleAddTag = () => {
+    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+      setTags([...tags, tagInput.trim()]);
+      setTagInput('');
     }
   };
+
+  const handleRemoveTag = (tag: string) => {
+    setTags(tags.filter(t => t !== tag));
+  };
+
+  const handleSuggestedTagClick = (tag: string) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+    }
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setCategory(value);
+    // When category changes, suggest tags based on the category
+    setTags([]);
+  };
+
+  const saveItem = () => {
+    if (!image) {
+      toast({
+        title: "Image required",
+        description: "Please upload an image of your clothing item",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!name.trim()) {
+      toast({
+        title: "Name required",
+        description: "Please provide a name for your clothing item",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    onImageUploaded(image, category, name, description, color, tags);
+    
+    // Reset form
+    setImage(null);
+    setName('');
+    setDescription('');
+    setColor('');
+    setTags([]);
+    
+    toast({
+      title: "Item added!",
+      description: `${name} has been added to your wardrobe.`,
+    });
+  };
+
+  // Get suggested tags based on selected category
+  const categoryTags = category ? DEFAULT_TAGS[category as keyof typeof DEFAULT_TAGS] || [] : [];
+  const allSuggestedTags = [...new Set([...categoryTags, ...suggestedTags])];
 
   return (
     <div className="w-full py-8 animate-fade-up">
@@ -91,7 +184,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onImageUploaded }) => {
         
         {!image ? (
           <div 
-            className={`drop-area p-12 text-center ${dragActive ? 'drop-area-active' : ''}`}
+            className={`border-2 border-dashed rounded-lg p-12 text-center ${dragActive ? 'border-primary bg-primary/5' : 'border-border'}`}
             onDragEnter={handleDrag}
             onDragOver={handleDrag}
             onDragLeave={handleDrag}
@@ -106,18 +199,17 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onImageUploaded }) => {
             />
             
             <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><line x1="16" x2="22" y1="5" y2="5"/><line x1="19" x2="19" y1="2" y2="8"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              <Upload size={24} />
             </div>
             
             <p className="text-muted-foreground mb-2">Drag & drop your clothing item here</p>
             <p className="text-sm text-muted-foreground mb-6">or</p>
             
-            <label 
-              htmlFor="file-upload" 
-              className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
-            >
-              Select Image
-            </label>
+            <Button variant="default" asChild>
+              <label htmlFor="file-upload" className="cursor-pointer">
+                Select Image
+              </label>
+            </Button>
           </div>
         ) : (
           <div className="space-y-6">
@@ -136,38 +228,138 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onImageUploaded }) => {
             </div>
             
             <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Item Name</Label>
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="E.g., Blue Oxford Shirt"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Select value={category} onValueChange={handleCategoryChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="tops">Tops</SelectItem>
+                        <SelectItem value="bottoms">Bottoms</SelectItem>
+                        <SelectItem value="outerwear">Outerwear</SelectItem>
+                        <SelectItem value="dresses">Dresses</SelectItem>
+                        <SelectItem value="shoes">Shoes</SelectItem>
+                        <SelectItem value="accessories">Accessories</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
               <div className="space-y-2">
-                <label htmlFor="category" className="block text-sm font-medium">
-                  Category
-                </label>
-                <select
-                  id="category"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <option value="tops">Tops</option>
-                  <option value="bottoms">Bottoms</option>
-                  <option value="outerwear">Outerwear</option>
-                  <option value="dresses">Dresses</option>
-                  <option value="shoes">Shoes</option>
-                  <option value="accessories">Accessories</option>
-                </select>
+                <Label htmlFor="description">Description (Optional)</Label>
+                <Input
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Add details about material, fit, etc."
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="color">Color</Label>
+                <Select value={color} onValueChange={setColor}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a color" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {COLORS.map(colorOption => (
+                        <SelectItem key={colorOption.value} value={colorOption.value}>
+                          {colorOption.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="tags">Tags</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="tags"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    placeholder="Add tags (e.g., casual, winter)"
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
+                  />
+                  <Button type="button" onClick={handleAddTag} variant="outline">
+                    <TagIcon size={16} className="mr-2" />
+                    Add
+                  </Button>
+                </div>
+                
+                {/* Tags list */}
+                {tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {tags.map(tag => (
+                      <Badge key={tag} className="px-2 py-1 flex items-center gap-1">
+                        {tag}
+                        <button 
+                          type="button" 
+                          onClick={() => handleRemoveTag(tag)} 
+                          className="ml-1 hover:bg-primary-foreground/20 rounded-full h-4 w-4 inline-flex items-center justify-center"
+                        >
+                          <X size={12} />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Suggested tags */}
+                {allSuggestedTags.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-sm text-muted-foreground mb-1">Suggested tags:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {allSuggestedTags.map(tag => (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => handleSuggestedTagClick(tag)}
+                          className={`text-xs px-2 py-1 rounded-full border ${
+                            tags.includes(tag) 
+                              ? 'bg-primary text-primary-foreground'
+                              : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                          }`}
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
               
               <div className="flex space-x-3">
-                <button
+                <Button
+                  variant="outline"
                   onClick={() => setImage(null)}
-                  className="inline-flex h-10 flex-1 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  className="flex-1"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={saveItem}
-                  className="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  className="flex-1"
                 >
                   Add to Wardrobe
-                </button>
+                </Button>
               </div>
             </div>
           </div>
