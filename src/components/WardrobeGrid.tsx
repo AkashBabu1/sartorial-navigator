@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Tag, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import TagBadge from '@/components/TagBadge';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 export interface ClothingItem {
   id: string;
@@ -97,96 +99,61 @@ const WardrobeGrid: React.FC<WardrobeGridProps> = ({
   };
 
   return (
-    <div className={cn("w-full space-y-6", className)}>
-      {filteredItems.length === 0 ? (
-        <div className="py-12 text-center">
-          <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" x2="19.07" y1="4.93" y2="19.07"/></svg>
-          </div>
-          <h3 className="text-lg font-medium mb-1">No items found</h3>
-          <p className="text-muted-foreground text-sm">
-            {activeCategory || activeTags.length > 0
-              ? `No items match your current filters.`
-              : "Your wardrobe is empty. Add some clothing items to get started."}
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredItems.map((item) => (
-            <div 
-              key={item.id} 
-              className={cn(
-                "group relative aspect-square rounded-lg overflow-hidden border bg-card transition-all duration-300 hover:shadow-md",
-                selectable && "cursor-pointer",
-                selectedIds.includes(item.id) && "ring-2 ring-primary"
-              )}
-              onClick={() => {
-                if (selectable && onItemSelect) {
-                  onItemSelect(item.id);
-                } else if (onItemClick) {
-                  onItemClick(item);
-                }
-              }}
-            >
-              <img 
-                src={item.image} 
-                alt={item.name || `${item.category} item`} 
-                className="w-full h-full object-cover"
-              />
-              
-              {onItemDelete && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onItemDelete(item.id);
-                  }}
-                  className="absolute top-2 right-2 h-8 w-8 rounded-full bg-background/80 text-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                  aria-label="Delete item"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                </button>
-              )}
-              
-              {onTagsUpdate && (
-                <button
-                  onClick={(e) => handleTagsClick(item.id, e)}
-                  className="absolute top-2 left-2 h-8 w-8 rounded-full bg-background/80 text-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                  aria-label="Manage tags"
-                >
-                  <Tag size={16} />
-                </button>
-              )}
-              
-              {selectable && selectedIds.includes(item.id) && (
-                <div className="absolute top-2 left-2 h-6 w-6 rounded-full bg-primary text-white flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-              )}
-              
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                <div className="text-sm text-white font-medium">
-                  {item.name || item.category}
-                </div>
-                {item.tags && item.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {item.tags.slice(0, 3).map(tag => (
-                      <span key={tag} className="px-1.5 py-0.5 bg-primary/80 text-white text-xs rounded-full">
-                        {tag}
-                      </span>
-                    ))}
-                    {item.tags.length > 3 && (
-                      <span className="px-1.5 py-0.5 bg-background/60 text-white text-xs rounded-full">
-                        +{item.tags.length - 3}
-                      </span>
-                    )}
-                  </div>
-                )}
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4", className)}>
+      {filteredItems.map((item) => (
+        <Card key={item.id} className="overflow-hidden border bg-card h-full flex flex-col">
+          <div 
+            className="relative aspect-square cursor-pointer"
+            onClick={() => onItemClick && onItemClick(item)}
+          >
+            <img 
+              src={item.image} 
+              alt={item.name || `${item.category} item`}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-10 h-10 bg-white/80 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>
+                </svg>
               </div>
             </div>
-          ))}
-        </div>
-      )}
-
+            <div className="absolute bottom-2 left-2 right-2 text-center bg-white/80 py-1 px-2 rounded">
+              <p className="font-medium text-sm">{item.name}</p>
+            </div>
+          </div>
+          
+          <CardContent className="p-3 pt-3 flex-grow flex flex-col">
+            <div className="text-sm font-medium">
+              {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {item.color}
+            </div>
+            
+            {item.tags && item.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {item.tags.slice(0, 2).map(tag => (
+                  <TagBadge key={tag} tag={tag} />
+                ))}
+              </div>
+            )}
+          </CardContent>
+          
+          <CardFooter className="p-3 pt-0 border-t">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full flex items-center justify-center gap-1 text-xs"
+              onClick={(e) => handleTagsClick(item.id, e)}
+            >
+              <Tag size={14} />
+              Manage Tags
+            </Button>
+          </CardFooter>
+        </Card>
+      ))}
+      
       {/* Tags Modal */}
       {showTagsModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
