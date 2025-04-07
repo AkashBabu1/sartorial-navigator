@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
 
 interface CallToActionProps {
   onGetStarted: (e: React.MouseEvent) => void;
@@ -24,16 +23,16 @@ const CallToAction: React.FC<CallToActionProps> = ({ onGetStarted }) => {
           Join thousands of users who have simplified their outfit selection process and rediscovered items in their wardrobe.
         </p>
         
-        <div className="relative group inline-block">
-          <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 opacity-70 blur-lg group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-xy"></div>
-          <Button
-            onClick={onGetStarted}
-            className="relative h-12 px-8 font-medium text-white rounded-lg bg-black dark:bg-slate-900 hover:bg-slate-800 transition-all duration-300"
-          >
-            Get Started Now
-            <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
-          </Button>
-        </div>
+        <button
+          onClick={onGetStarted}
+          className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring relative overflow-hidden group"
+        >
+          <span className="absolute inset-0 overflow-hidden rounded-md">
+            <span className="absolute inset-0 rounded-md animate-border-flow bg-gradient-to-r from-blue-400 via-primary to-blue-600 bg-[length:400%_100%]"></span>
+          </span>
+          <span className="absolute inset-[2px] bg-primary rounded-md transition-colors group-hover:bg-primary/90"></span>
+          <span className="relative z-10">Get Started Now</span>
+        </button>
       </div>
     </section>
   );

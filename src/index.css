@@ -108,24 +108,6 @@
   .text-balance {
     text-wrap: balance;
   }
-
-  /* Rainbow gradient animation */
-  @keyframes gradient-xy {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  .animate-gradient-xy {
-    animation: gradient-xy 5s ease infinite;
-    background-size: 300% 300%;
-  }
 }
 
 /* Custom animations for infinite slider */
@@ -207,43 +189,6 @@
 
 .animate-slider-down {
   animation: slide-down 25s linear infinite;
-}
-
-/* New floating animation */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 5s ease-in-out infinite;
-}
-
-/* Meteor animation */
-@keyframes meteor {
-  0% {
-    transform: rotate(215deg) translateX(0);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(215deg) translateX(-500px);
-    opacity: 0;
-  }
-}
-
-.animate-meteor-effect {
-  animation: meteor linear;
-  animation-fill-mode: forwards;
 }
 
 /* Custom styles */
