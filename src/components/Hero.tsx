@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AuthModal from './AuthModal';
 import PixelTrail from './effects/PixelTrail';
-import FloatingPaths from './effects/FloatingPaths';
+import Meteors from './effects/Meteors';
 import { Button } from './ui/button';
 
 const Hero = () => {
@@ -67,10 +67,10 @@ const Hero = () => {
 
   return (
     <div ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-32 px-4 md:px-0">
-      {/* Animated Background Paths */}
-      <div className="absolute inset-0">
-        <FloatingPaths position={1} />
-        <FloatingPaths position={-1} />
+      {/* Meteors Animation */}
+      <div className="absolute inset-0 overflow-hidden">
+        <Meteors number={20} />
+        <Meteors number={15} className="opacity-70" />
       </div>
       
       {/* Pixel Trail Animation */}

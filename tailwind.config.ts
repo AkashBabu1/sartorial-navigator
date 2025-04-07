@@ -95,6 +95,12 @@ export default {
           from: { transform: "translateY(calc(-66.666% - 1rem))" },
           to: { transform: "translateY(0)" },
         },
+        "meteor": {
+          "0%": { transform: "rotate(215deg) translateX(0)", opacity: "0" },
+          "5%": { opacity: "1" },
+          "70%": { opacity: "1" },
+          "100%": { transform: "rotate(215deg) translateX(-500px)", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -105,6 +111,7 @@ export default {
         "slider-right-fast": "slide-right-fast 20s linear infinite",
         "slider-up": "slide-up 25s linear infinite",
         "slider-down": "slide-down 25s linear infinite",
+        "meteor-effect": "meteor linear forwards",
       },
     },
   },
