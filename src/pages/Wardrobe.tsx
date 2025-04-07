@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import UploadSection from '@/components/UploadSection';
@@ -138,10 +137,22 @@ const Wardrobe = () => {
       (item.tags?.some(tag => tag.toLowerCase().includes(term)))
     );
   }
+
+  // Category filter (updated to handle the "all" value)
+  if (activeCategory && activeCategory !== "all") {
+    filteredItems = filteredItems.filter(item => item.category === activeCategory);
+  }
   
   // Color filter
   if (activeColor) {
     filteredItems = filteredItems.filter(item => item.color === activeColor);
+  }
+  
+  // Tags filter
+  if (activeTags.length > 0) {
+    filteredItems = filteredItems.filter(item => 
+      item.tags && activeTags.every(tag => item.tags.includes(tag))
+    );
   }
   
   // Get most used tags for suggestions
@@ -198,12 +209,12 @@ const Wardrobe = () => {
             </div>
             
             <div className="flex gap-2">
-              <Select value={activeCategory || ''} onValueChange={(value) => setActiveCategory(value || null)}>
+              <Select value={activeCategory || 'all'} onValueChange={(value) => setActiveCategory(value === 'all' ? null : value)}>
                 <SelectTrigger className="min-w-[150px]">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
                   <SelectItem value="tops">Tops</SelectItem>
                   <SelectItem value="bottoms">Bottoms</SelectItem>
                   <SelectItem value="outerwear">Outerwear</SelectItem>
@@ -224,7 +235,6 @@ const Wardrobe = () => {
             </div>
           </div>
           
-          {/* Active filters display */}
           {(activeTags.length > 0 || activeColor) && (
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <span className="text-sm text-muted-foreground">Active filters:</span>
@@ -265,7 +275,6 @@ const Wardrobe = () => {
           )}
         </div>
         
-        {/* Filter modal */}
         {showFilterModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-background rounded-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
