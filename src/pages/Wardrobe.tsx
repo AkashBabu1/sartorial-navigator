@@ -13,7 +13,7 @@ const Wardrobe = () => {
   const [items, setItems] = useState<ClothingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>('all');
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const { toast } = useToast();
@@ -22,23 +22,33 @@ const Wardrobe = () => {
   const commonTags = ['casual', 'cozy', 'everyday', 'formal', 'smart-casual', 'summer', 'weekend', 'winter', 'work'];
   
   useEffect(() => {
-    // Simulate loading data from storage
-    const savedItems = localStorage.getItem('wardrobe');
-    
-    if (savedItems) {
-      try {
-        setItems(JSON.parse(savedItems));
-      } catch (error) {
-        console.error('Failed to parse wardrobe data', error);
+    // Load data from storage
+    const loadWardrobeItems = () => {
+      const savedItems = localStorage.getItem('wardrobe');
+      console.log("Loading wardrobe from localStorage:", savedItems);
+      
+      if (savedItems) {
+        try {
+          const parsedItems = JSON.parse(savedItems);
+          console.log("Parsed wardrobe items:", parsedItems);
+          setItems(parsedItems);
+        } catch (error) {
+          console.error('Failed to parse wardrobe data', error);
+          // In case of error, initialize with empty array
+          setItems([]);
+        }
       }
-    }
+      
+      setLoading(false);
+    };
     
-    setLoading(false);
+    loadWardrobeItems();
   }, []);
   
   useEffect(() => {
     // Save to local storage whenever items change
     if (items.length > 0) {
+      console.log("Saving to localStorage:", items);
       localStorage.setItem('wardrobe', JSON.stringify(items));
     }
   }, [items]);
@@ -61,7 +71,8 @@ const Wardrobe = () => {
       tags
     };
     
-    setItems((prev) => [...prev, newItem]);
+    console.log("Adding new item:", newItem);
+    setItems(prevItems => [...prevItems, newItem]);
     setShowUploadForm(false);
     
     toast({
@@ -108,7 +119,7 @@ const Wardrobe = () => {
   
   const toggleCategory = (category: string | null) => {
     if (activeCategory === category) {
-      setActiveCategory(null);
+      setActiveCategory('all');
     } else {
       setActiveCategory(category);
     }
@@ -129,17 +140,14 @@ const Wardrobe = () => {
     );
   }
 
-  // Category filter
-  if (activeCategory) {
-    filteredItems = filteredItems.filter(item => item.category === activeCategory);
-  }
-  
-  // Tags filter
-  if (activeTags.length > 0) {
-    filteredItems = filteredItems.filter(item => 
-      item.tags && activeTags.every(tag => item.tags.includes(tag))
-    );
-  }
+  // Log current state for debugging
+  console.log("Current state:", {
+    totalItems: items.length,
+    filteredItems: filteredItems.length,
+    activeCategory,
+    activeTags,
+    searchTerm
+  });
 
   return (
     <div className="min-h-screen pb-20">
@@ -197,9 +205,9 @@ const Wardrobe = () => {
           
           <div className="flex items-center gap-2 overflow-x-auto py-2">
             <Button 
-              variant={activeCategory === null ? "default" : "outline"} 
+              variant={activeCategory === 'all' ? "default" : "outline"} 
               size="sm"
-              onClick={() => toggleCategory(null)}
+              onClick={() => toggleCategory('all')}
             >
               All Items
             </Button>
@@ -258,7 +266,7 @@ const Wardrobe = () => {
               ></div>
             ))}
           </div>
-        ) : filteredItems.length === 0 ? (
+        ) : filteredItems.length === 0 && items.length === 0 ? (
           <div className="py-12 text-center">
             <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" x2="19.07" y1="4.93" y2="19.07"/></svg>
@@ -275,6 +283,8 @@ const Wardrobe = () => {
             items={filteredItems} 
             onItemDelete={handleItemDelete} 
             onTagsUpdate={handleTagsUpdate}
+            activeCategory={activeCategory}
+            activeTags={activeTags}
           />
         )}
       </div>
